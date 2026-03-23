@@ -9,211 +9,200 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#0e0a0f;--bg2:#150f17;--bg3:#1c1320;--card:#1e1525;
-  --border:rgba(220,170,120,0.13);--border2:rgba(220,170,120,0.25);
-  --gold:#c9945a;--gold2:#e8c090;--rose:#c4607a;--rose2:#e8a0b0;
-  --cream:#f5ede0;--muted:rgba(245,237,224,0.4);--muted2:rgba(245,237,224,0.22);
-}
+:root{--bg:#0e0a0f;--bg2:#150f17;--bg3:#1c1320;--card:#1e1525;--border:rgba(220,170,120,0.13);--border2:rgba(220,170,120,0.25);--gold:#c9945a;--gold2:#e8c090;--rose:#c4607a;--rose2:#e8a0b0;--cream:#f5ede0;--muted:rgba(245,237,224,0.4);--muted2:rgba(245,237,224,0.22);}
 html,body{height:100%;overflow:hidden}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--cream);display:flex;flex-direction:column;max-width:480px;margin:0 auto;position:relative;}
 body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:999;opacity:0.6;}
 
 /* SPLASH */
-#splash{position:fixed;inset:0;z-index:500;background:var(–bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;padding:32px;transition:opacity 0.6s ease;}
-.splash-names{font-family:‘Playfair Display’,serif;font-style:italic;font-size:clamp(2rem,8vw,2.8rem);text-align:center;line-height:1.15;margin-bottom:12px;}
-.splash-names .n1{color:var(–gold2);}.splash-names .amp{color:var(–muted2);font-size:0.7em;}.splash-names .n2{color:var(–rose2);}
-.splash-heart{font-size:2rem;animation:heartbeat 2s ease-in-out infinite;margin-bottom:32px;display:block;}
+#splash{position:fixed;inset:0;z-index:500;background:var(–bg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;transition:opacity 0.6s ease;}
+.splash-names{font-family:‘Playfair Display’,serif;font-style:italic;font-size:clamp(1.8rem,7vw,2.6rem);text-align:center;line-height:1.2;margin-bottom:10px;}
+.splash-names .n1{color:var(–gold2);}.splash-names .amp{color:var(–muted2);font-size:0.75em;display:block;}.splash-names .n2{color:var(–rose2);}
+.splash-heart{font-size:2rem;animation:heartbeat 2s ease-in-out infinite;margin-bottom:24px;display:block;}
 @keyframes heartbeat{0%,100%{transform:scale(1);}14%{transform:scale(1.15);}28%{transform:scale(1);}42%{transform:scale(1.08);}70%{transform:scale(1);}}
-.splash-tagline{font-size:0.65rem;letter-spacing:0.25em;text-transform:uppercase;color:var(–muted);margin-bottom:40px;}
-.splash-input-wrap{width:100%;max-width:280px;display:flex;flex-direction:column;gap:14px;}
-.splash-label{font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(–muted);margin-bottom:5px;display:block;}
+.splash-tagline{font-size:0.62rem;letter-spacing:0.22em;text-transform:uppercase;color:var(–muted);margin-bottom:32px;}
+.splash-input-wrap{width:100%;max-width:300px;display:flex;flex-direction:column;gap:14px;}
+.splash-lbl{font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(–muted);margin-bottom:6px;display:block;}
 .splash-who{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.who-btn{padding:12px;border-radius:10px;border:1.5px solid var(–border);background:transparent;cursor:pointer;font-family:‘DM Sans’,sans-serif;font-size:0.75rem;transition:all 0.2s;text-align:center;}
+.who-btn{padding:13px 8px;border-radius:12px;border:1.5px solid var(–border);background:transparent;cursor:pointer;font-family:‘DM Sans’,sans-serif;font-size:0.72rem;transition:all 0.2s;text-align:center;}
 .who-btn[data-who=“oyin”]{color:var(–gold2);}.who-btn[data-who=“mofe”]{color:var(–rose2);}
-.who-btn.selected[data-who=“oyin”]{background:rgba(201,148,90,0.15);border-color:var(–gold);}
-.who-btn.selected[data-who=“mofe”]{background:rgba(196,96,122,0.15);border-color:var(–rose);}
-.splash-input{width:100%;padding:13px 16px;background:var(–card);border:1px solid var(–border2);border-radius:10px;color:var(–cream);font-family:‘DM Sans’,sans-serif;font-size:0.9rem;outline:none;transition:border-color 0.2s;}
-.splash-input:focus{border-color:var(–gold);}
-.splash-btn{width:100%;padding:14px;background:linear-gradient(135deg,var(–rose),#8a3050);color:var(–cream);border:none;border-radius:10px;font-family:‘DM Sans’,sans-serif;font-size:0.72rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;margin-top:4px;}
-.splash-btn:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(196,96,122,0.3);}
+.who-btn.sel[data-who=“oyin”]{background:rgba(201,148,90,0.15);border-color:var(–gold);}
+.who-btn.sel[data-who=“mofe”]{background:rgba(196,96,122,0.15);border-color:var(–rose);}
+.splash-input{width:100%;padding:12px 14px;background:var(–card);border:1px solid var(–border2);border-radius:10px;color:var(–cream);font-family:‘DM Sans’,sans-serif;font-size:0.9rem;outline:none;}
+.splash-btn{width:100%;padding:14px;background:linear-gradient(135deg,var(–rose),#8a3050);color:var(–cream);border:none;border-radius:12px;font-family:‘DM Sans’,sans-serif;font-size:0.7rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;}
+.splash-btn:active{opacity:0.85;}
 
-/* LOADING overlay */
-#loading{position:fixed;inset:0;z-index:400;background:var(–bg);display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;}
-.loading-heart{font-size:2.5rem;animation:heartbeat 1s ease-in-out infinite;}
-.loading-txt{font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(–muted);}
+/* LOADING */
+#loading{position:fixed;inset:0;z-index:400;background:var(–bg);display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;}
+.ld-heart{font-size:2.5rem;animation:heartbeat 1s ease-in-out infinite;}
+.ld-txt{font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:var(–muted);}
 
 /* APP */
 #app{display:none;flex-direction:column;height:100vh;}
-.hdr{padding:16px 20px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(–border);flex-shrink:0;}
-.hdr-names{font-family:‘Playfair Display’,serif;font-style:italic;font-size:1.05rem;line-height:1;}
-.hdr-names .h-oyin{color:var(–gold2);}.hdr-names .h-amp{color:var(–muted2);font-size:0.85em;margin:0 3px;}.hdr-names .h-mofe{color:var(–rose2);}
-.streak-badge{display:flex;align-items:center;gap:5px;background:rgba(201,148,90,0.12);border:1px solid rgba(201,148,90,0.2);border-radius:100px;padding:5px 11px;font-size:0.62rem;letter-spacing:0.08em;color:var(–gold);}
+.hdr{padding:13px 16px 11px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(–border);flex-shrink:0;}
+.hdr-names{font-family:‘Playfair Display’,serif;font-style:italic;font-size:1rem;}
+.h-oyin{color:var(–gold2);}.h-amp{color:var(–muted2);font-size:0.85em;margin:0 3px;}.h-mofe{color:var(–rose2);}
+.hdr-r{display:flex;align-items:center;gap:7px;}
+.streak-badge{display:flex;align-items:center;gap:4px;background:rgba(201,148,90,0.12);border:1px solid rgba(201,148,90,0.2);border-radius:100px;padding:5px 10px;font-size:0.6rem;color:var(–gold);}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:#4caf50;flex-shrink:0;transition:background 0.3s;}
+.sync-dot.sy{background:var(–gold);animation:pd 1s infinite;}
+.sync-dot.er{background:#ef5350;}
+@keyframes pd{0%,100%{opacity:1;}50%{opacity:0.3;}}
 .scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
 .scroll::-webkit-scrollbar{display:none;}
-.bnav{display:flex;border-top:1px solid var(–border);flex-shrink:0;background:var(–bg);padding-bottom:env(safe-area-inset-bottom);}
-.bnav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:10px 4px;border:none;background:transparent;cursor:pointer;transition:all 0.15s;-webkit-tap-highlight-color:transparent;}
-.bnav-icon{font-size:1.25rem;line-height:1;}
-.bnav-lbl{font-size:0.5rem;letter-spacing:0.1em;text-transform:uppercase;color:var(–muted);transition:color 0.15s;}
-.bnav-btn.active .bnav-lbl{color:var(–rose2);}.bnav-btn.active .bnav-icon{filter:drop-shadow(0 0 6px var(–rose));}
-
-/* SECTIONS */
-.sec{display:none;padding:20px 18px 100px;}.sec.active{display:block;}
+.bnav{display:flex;border-top:1px solid var(–border);flex-shrink:0;background:var(–bg);padding-bottom:env(safe-area-inset-bottom,0px);}
+.nb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:9px 2px;border:none;background:transparent;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.ni{font-size:1.2rem;line-height:1;}
+.nl{font-size:0.46rem;letter-spacing:0.08em;text-transform:uppercase;color:var(–muted);}
+.nb.active .nl{color:var(–rose2);}.nb.active .ni{filter:drop-shadow(0 0 5px var(–rose));}
+.sec{display:none;padding:18px 16px 110px;}.sec.active{display:block;}
 
 /* HOME */
-.home-hero{background:linear-gradient(160deg,#1c1020 0%,#2a1530 50%,#1a0d20 100%);border:1px solid var(–border);border-radius:20px;padding:24px 22px;margin-bottom:16px;position:relative;overflow:hidden;}
-.home-hero::before{content:’’;position:absolute;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(196,96,122,0.12),transparent 70%);top:-50px;right:-50px;pointer-events:none;}
-.home-who{font-size:0.58rem;letter-spacing:0.18em;text-transform:uppercase;color:var(–muted);margin-bottom:6px;}
-.home-greeting{font-family:‘Playfair Display’,serif;font-style:italic;font-size:1.6rem;color:var(–cream);margin-bottom:20px;line-height:1.2;}
-.cd-row{display:flex;gap:8px;}
-.cd-box{flex:1;background:rgba(0,0,0,0.3);border:1px solid var(–border);border-radius:12px;padding:12px 8px;text-align:center;}
-.cd-num{font-family:‘Playfair Display’,serif;font-size:1.8rem;font-weight:700;color:var(–gold2);line-height:1;display:block;}
-.cd-lbl{font-size:0.48rem;letter-spacing:0.15em;text-transform:uppercase;color:var(–muted);margin-top:3px;display:block;}
-.stat-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
-.stat-card{background:var(–card);border:1px solid var(–border);border-radius:16px;padding:16px;display:flex;flex-direction:column;justify-content:space-between;min-height:90px;}
-.stat-lbl{font-size:0.55rem;letter-spacing:0.15em;text-transform:uppercase;color:var(–muted);margin-bottom:6px;}
-.stat-val{font-family:‘Playfair Display’,serif;font-size:1.9rem;font-weight:700;color:var(–gold2);line-height:1;}
-.stat-sub{font-size:0.6rem;color:var(–muted);margin-top:4px;}
-.full-card{background:var(–card);border:1px solid var(–border);border-radius:16px;padding:16px;margin-bottom:12px;}
-.full-card-lbl{font-size:0.55rem;letter-spacing:0.15em;text-transform:uppercase;color:var(–muted);margin-bottom:8px;}
-.full-card-val{font-family:‘Playfair Display’,serif;font-style:italic;color:var(–cream);font-size:0.92rem;line-height:1.5;}
-.qotd-banner{background:linear-gradient(135deg,#1a0d25,#2a1535);border:1px solid rgba(196,96,122,0.25);border-radius:16px;padding:18px;margin-bottom:12px;cursor:pointer;transition:border-color 0.2s;}
-.qotd-banner:hover{border-color:rgba(196,96,122,0.5);}
-.qotd-tag{font-size:0.55rem;letter-spacing:0.18em;text-transform:uppercase;color:var(–rose2);margin-bottom:8px;}
-.qotd-text{font-family:‘Playfair Display’,serif;font-style:italic;font-size:1rem;color:var(–cream);line-height:1.4;}
-.qotd-cta{font-size:0.62rem;color:var(–muted);margin-top:10px;}
+.hero{background:linear-gradient(160deg,#1c1020,#2a1530,#1a0d20);border:1px solid var(–border);border-radius:18px;padding:20px;margin-bottom:14px;position:relative;overflow:hidden;}
+.hero::before{content:’’;position:absolute;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(196,96,122,0.12),transparent 70%);top:-40px;right:-40px;pointer-events:none;}
+.hero-who{font-size:0.54rem;letter-spacing:0.18em;text-transform:uppercase;color:var(–muted);margin-bottom:5px;}
+.hero-greet{font-family:‘Playfair Display’,serif;font-style:italic;font-size:1.45rem;color:var(–cream);margin-bottom:16px;line-height:1.2;}
+.cd-row{display:flex;gap:6px;}
+.cd-box{flex:1;background:rgba(0,0,0,0.3);border:1px solid var(–border);border-radius:10px;padding:10px 5px;text-align:center;}
+.cd-n{font-family:‘Playfair Display’,serif;font-size:1.55rem;font-weight:700;color:var(–gold2);line-height:1;display:block;}
+.cd-l{font-size:0.42rem;letter-spacing:0.12em;text-transform:uppercase;color:var(–muted);margin-top:3px;display:block;}
+.stat-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.sc{background:var(–card);border:1px solid var(–border);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:5px;}
+.sl{font-size:0.5rem;letter-spacing:0.14em;text-transform:uppercase;color:var(–muted);}
+.sv{font-family:‘Playfair Display’,serif;font-size:1.75rem;font-weight:700;color:var(–gold2);line-height:1;}
+.ss{font-size:0.56rem;color:var(–muted);}
+.fc{background:var(–card);border:1px solid var(–border);border-radius:14px;padding:14px;margin-bottom:12px;}
+.fl{font-size:0.5rem;letter-spacing:0.14em;text-transform:uppercase;color:var(–muted);margin-bottom:6px;}
+.fv{font-family:‘Playfair Display’,serif;font-style:italic;color:var(–cream);font-size:0.88rem;line-height:1.5;}
+.qb{background:linear-gradient(135deg,#1a0d25,#2a1535);border:1px solid rgba(196,96,122,0.25);border-radius:14px;padding:16px;margin-bottom:12px;cursor:pointer;}
+.qt{font-size:0.5rem;letter-spacing:0.18em;text-transform:uppercase;color:var(–rose2);margin-bottom:7px;}
+.qq{font-family:‘Playfair Display’,serif;font-style:italic;font-size:0.94rem;color:var(–cream);line-height:1.4;}
+.qc{font-size:0.58rem;color:var(–muted);margin-top:7px;}
 
 /* SECTION HEADER */
-.sec-hdr{margin-bottom:20px;}
-.sec-title{font-family:‘Playfair Display’,serif;font-size:1.6rem;color:var(–cream);margin-bottom:3px;}
-.sec-sub{font-size:0.65rem;color:var(–muted);letter-spacing:0.05em;}
+.sh{margin-bottom:16px;}
+.st{font-family:‘Playfair Display’,serif;font-size:1.45rem;color:var(–cream);margin-bottom:2px;}
+.ss2{font-size:0.62rem;color:var(–muted);}
 
 /* INPUTS */
-.input-lbl{font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(–muted);display:block;margin-bottom:7px;}
-textarea,input[type=text],input[type=date],input[type=url]{width:100%;padding:12px 14px;background:var(–card);border:1.5px solid var(–border);border-radius:10px;color:var(–cream);font-family:‘DM Sans’,sans-serif;font-size:0.88rem;outline:none;transition:border-color 0.2s;resize:none;}
+.il{font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;color:var(–muted);display:block;margin-bottom:6px;}
+textarea,input[type=text],input[type=date],input[type=url]{width:100%;padding:11px 13px;background:var(–card);border:1.5px solid var(–border);border-radius:10px;color:var(–cream);font-family:‘DM Sans’,sans-serif;font-size:0.88rem;outline:none;transition:border-color 0.2s;resize:none;-webkit-appearance:none;appearance:none;}
 textarea::placeholder,input::placeholder{color:var(–muted2);}
 textarea:focus,input:focus{border-color:var(–gold);}
-.btn-primary{width:100%;padding:14px;background:linear-gradient(135deg,#8a3050,var(–rose));color:var(–cream);border:none;border-radius:10px;font-family:‘DM Sans’,sans-serif;font-size:0.68rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;-webkit-tap-highlight-color:transparent;}
-.btn-primary:active{transform:scale(0.98);}
-.btn-outline{width:100%;padding:13px;background:transparent;color:var(–cream);border:1.5px solid var(–border2);border-radius:10px;font-family:‘DM Sans’,sans-serif;font-size:0.68rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;-webkit-tap-highlight-color:transparent;}
-.btn-outline:active{background:rgba(255,255,255,0.05);}
+.bp{width:100%;padding:13px;background:linear-gradient(135deg,#8a3050,var(–rose));color:var(–cream);border:none;border-radius:10px;font-family:‘DM Sans’,sans-serif;font-size:0.66rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.bp:active{opacity:0.82;}
+.bo{width:100%;padding:12px;background:transparent;color:var(–cream);border:1.5px solid var(–border2);border-radius:10px;font-family:‘DM Sans’,sans-serif;font-size:0.66rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.bo:active{background:rgba(255,255,255,0.05);}
+.m12{margin-bottom:12px;}.m16{margin-bottom:16px;}
 
 /* MOOD */
-.mood-who-tabs{display:flex;gap:8px;margin-bottom:18px;}
-.mood-who-tab{flex:1;padding:10px;border-radius:10px;border:1.5px solid var(–border);background:transparent;font-family:‘DM Sans’,sans-serif;font-size:0.68rem;font-weight:500;letter-spacing:0.08em;cursor:pointer;transition:all 0.2s;}
-.mood-who-tab[data-who=“oyin”]{color:var(–gold2);}.mood-who-tab[data-who=“mofe”]{color:var(–rose2);}
-.mood-who-tab.active[data-who=“oyin”]{background:rgba(201,148,90,0.15);border-color:var(–gold);}
-.mood-who-tab.active[data-who=“mofe”]{background:rgba(196,96,122,0.15);border-color:var(–rose);}
-.mood-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px;}
-.mood-btn{aspect-ratio:1;border:1.5px solid var(–border);border-radius:14px;background:var(–card);cursor:pointer;transition:all 0.18s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;-webkit-tap-highlight-color:transparent;padding:8px 4px;}
-.mood-btn:active{transform:scale(0.93);}.mood-btn.sel{border-color:var(–rose);background:rgba(196,96,122,0.1);}
-.mood-emoji-icon{font-size:1.5rem;line-height:1;}.mood-name{font-size:0.48rem;letter-spacing:0.05em;color:var(–muted);}
-.feed-lbl{font-size:0.55rem;letter-spacing:0.18em;text-transform:uppercase;color:var(–muted);margin:20px 0 12px;}
-.mood-entry{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(–border);animation:fadeUp 0.3s ease;}
-@keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
-.me-emoji{font-size:1.5rem;flex-shrink:0;margin-top:2px;}.me-body{flex:1;min-width:0;}
-.me-who{font-size:0.65rem;font-weight:500;margin-bottom:2px;}
-.me-who.oyin{color:var(–gold);}.me-who.mofe{color:var(–rose2);}
-.me-note{font-family:‘Playfair Display’,serif;font-style:italic;font-size:0.9rem;color:var(–cream);word-break:break-word;margin-bottom:2px;}
-.me-time{font-size:0.55rem;color:var(–muted);}
+.wtabs{display:flex;gap:8px;margin-bottom:14px;}
+.wtab{flex:1;padding:10px;border-radius:10px;border:1.5px solid var(–border);background:transparent;font-family:‘DM Sans’,sans-serif;font-size:0.66rem;font-weight:500;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.wtab[data-who=oyin]{color:var(–gold2);}.wtab[data-who=mofe]{color:var(–rose2);}
+.wtab.active[data-who=oyin]{background:rgba(201,148,90,0.15);border-color:var(–gold);}
+.wtab.active[data-who=mofe]{background:rgba(196,96,122,0.15);border-color:var(–rose);}
+.mgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:13px;}
+.mb2{aspect-ratio:1;border:1.5px solid var(–border);border-radius:12px;background:var(–card);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;-webkit-tap-highlight-color:transparent;padding:5px 3px;}
+.mb2:active{transform:scale(0.91);}.mb2.sel{border-color:var(–rose);background:rgba(196,96,122,0.12);}
+.mei{font-size:1.4rem;line-height:1;}.mn{font-size:0.42rem;color:var(–muted);}
+.fl2{font-size:0.5rem;letter-spacing:0.16em;text-transform:uppercase;color:var(–muted);margin:16px 0 10px;}
+.me{display:flex;gap:11px;padding:11px 0;border-bottom:1px solid var(–border);animation:fu 0.3s ease;}
+@keyframes fu{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.mee{font-size:1.35rem;flex-shrink:0;margin-top:2px;}.meb{flex:1;min-width:0;}
+.mew{font-size:0.62rem;font-weight:500;margin-bottom:2px;}
+.mew.oyin{color:var(–gold);}.mew.mofe{color:var(–rose2);}
+.men{font-family:‘Playfair Display’,serif;font-style:italic;font-size:0.87rem;color:var(–cream);word-break:break-word;margin-bottom:2px;line-height:1.4;}
+.met{font-size:0.5rem;color:var(–muted);}
 
 /* STREAK */
-.streak-hero{background:linear-gradient(135deg,#1a1010,#2a1520);border:1px solid rgba(201,148,90,0.2);border-radius:20px;padding:28px 22px;text-align:center;margin-bottom:16px;}
-.streak-num{font-family:‘Playfair Display’,serif;font-size:5rem;font-weight:700;color:var(–gold2);line-height:1;display:block;}
-.streak-fire{font-size:2rem;display:block;margin:8px 0;}
-.streak-desc{font-size:0.7rem;color:var(–muted);line-height:1.6;}
-.streak-checkin-area{background:var(–card);border:1px solid var(–border);border-radius:16px;padding:20px;margin-bottom:16px;}
-.streak-who-row{display:flex;gap:10px;margin-bottom:14px;}
-.streak-who-pill{flex:1;padding:10px;border-radius:10px;border:1.5px solid var(–border);background:transparent;font-family:‘DM Sans’,sans-serif;font-size:0.7rem;cursor:pointer;transition:all 0.2s;-webkit-tap-highlight-color:transparent;}
-.streak-who-pill.done{opacity:0.4;pointer-events:none;}
-.streak-who-pill[data-who=“oyin”]{color:var(–gold2);}.streak-who-pill[data-who=“mofe”]{color:var(–rose2);}
+.sh2{background:linear-gradient(135deg,#1a1010,#2a1520);border:1px solid rgba(201,148,90,0.2);border-radius:18px;padding:24px 20px;text-align:center;margin-bottom:14px;}
+.sn{font-family:‘Playfair Display’,serif;font-size:4.2rem;font-weight:700;color:var(–gold2);line-height:1;display:block;}
+.sf{font-size:1.7rem;display:block;margin:5px 0;}
+.sd{font-size:0.66rem;color:var(–muted);line-height:1.6;}
+.sa{background:var(–card);border:1px solid var(–border);border-radius:14px;padding:14px;margin-bottom:14px;}
+.srow{display:flex;gap:10px;}
+.sp{flex:1;padding:11px 6px;border-radius:10px;border:1.5px solid var(–border);background:transparent;font-family:‘DM Sans’,sans-serif;font-size:0.66rem;cursor:pointer;-webkit-tap-highlight-color:transparent;text-align:center;}
+.sp[data-who=oyin]{color:var(–gold2);}.sp[data-who=mofe]{color:var(–rose2);}
+.sp.done{opacity:0.45;pointer-events:none;}
+.sp.co{background:rgba(201,148,90,0.12);border-color:var(–gold);}
+.sp.cm{background:rgba(196,96,122,0.12);border-color:var(–rose);}
 
 /* LETTERS */
-.letter-compose{background:var(–card);border:1px solid var(–border);border-radius:16px;padding:18px;margin-bottom:18px;}
-.letter-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
-.letter-from{font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:var(–muted);}
-.letter-from span{font-family:‘Playfair Display’,serif;font-style:italic;font-size:0.9rem;text-transform:none;letter-spacing:0;}
-.letter-card{border:1px solid var(–border);border-radius:14px;padding:18px;margin-bottom:10px;animation:fadeUp 0.3s ease;cursor:pointer;transition:border-color 0.2s;}
-.letter-card:hover{border-color:var(–border2);}
-.letter-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
-.letter-sender{font-size:0.6rem;font-weight:500;}
-.letter-sender.oyin{color:var(–gold);}.letter-sender.mofe{color:var(–rose2);}
-.letter-date{font-size:0.55rem;color:var(–muted);}
-.letter-preview{font-family:‘Playfair Display’,serif;font-style:italic;font-size:0.92rem;color:var(–cream);line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
-.letter-expanded{display:none;margin-top:10px;padding-top:10px;border-top:1px solid var(–border);}
-.letter-expanded.open{display:block;}
-.letter-full{font-family:‘Playfair Display’,serif;font-style:italic;font-size:0.92rem;color:var(–cream);line-height:1.6;word-break:break-word;}
+.lc{background:var(–card);border:1px solid var(–border);border-radius:14px;padding:15px;margin-bottom:15px;}
+.lf{font-size:0.56rem;letter-spacing:0.12em;text-transform:uppercase;color:var(–muted);margin-bottom:11px;}
+.lf span{font-family:‘Playfair Display’,serif;font-style:italic;font-size:0.86rem;text-transform:none;letter-spacing:0;}
+.lcard{border:1px solid var(–border);border-radius:12px;padding:14px;margin-bottom:9px;animation:fu 0.3s ease;cursor:pointer;}
+.lmeta{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+.lsender{font-size:0.56rem;font-weight:500;}
+.lsender.oyin{color:var(–gold);}.lsender.mofe{color:var(–rose2);}
+.ldate{font-size:0.5rem;color:var(–muted);}
+.lprev{font-family:‘Playfair Display’,serif;font-style:italic;font-size:0.88rem;color:var(–cream);line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+.lfull-w{display:none;margin-top:9px;padding-top:9px;border-top:1px solid var(–border);}
+.lfull-w.open{display:block;}
+.lfull{font-family:‘Playfair Display’,serif;font-style:italic;font-size:0.88rem;color:var(–cream);line-height:1.6;word-break:break-word;white-space:pre-wrap;}
 
 /* QOTD */
-.qcard{background:linear-gradient(160deg,#1a0d25,#2a1535);border:1px solid rgba(196,96,122,0.2);border-radius:20px;padding:28px 22px;text-align:center;margin-bottom:18px;}
-.qcard-day{font-size:0.55rem;letter-spacing:0.2em;text-transform:uppercase;color:var(–rose2);margin-bottom:12px;}
-.qcard-q{font-family:‘Playfair Display’,serif;font-style:italic;font-size:1.3rem;color:var(–cream);line-height:1.4;margin-bottom:20px;}
-.qcard-answers{display:flex;flex-direction:column;gap:10px;}
-.q-answer-wrap{text-align:left;}
-.q-answer-who{font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:5px;}
-.q-answer-who.oyin{color:var(–gold);}.q-answer-who.mofe{color:var(–rose2);}
-.q-answered{background:rgba(0,0,0,0.25);border:1px solid var(–border);border-radius:10px;padding:10px 14px;font-family:‘Playfair Display’,serif;font-style:italic;font-size:0.88rem;color:var(–cream);line-height:1.4;}
-.q-empty{background:rgba(0,0,0,0.15);border:1.5px dashed var(–border);border-radius:10px;padding:10px 14px;font-size:0.65rem;color:var(–muted);font-style:italic;text-align:center;}
+.qcard{background:linear-gradient(160deg,#1a0d25,#2a1535);border:1px solid rgba(196,96,122,0.2);border-radius:18px;padding:22px 18px;margin-bottom:14px;}
+.qday{font-size:0.5rem;letter-spacing:0.2em;text-transform:uppercase;color:var(–rose2);margin-bottom:9px;}
+.qtext{font-family:‘Playfair Display’,serif;font-style:italic;font-size:1.15rem;color:var(–cream);line-height:1.4;margin-bottom:16px;}
+.qans{display:flex;flex-direction:column;gap:9px;}
+.qaw{text-align:left;}
+.qawho{font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px;}
+.qawho.oyin{color:var(–gold);}.qawho.mofe{color:var(–rose2);}
+.q-ans{background:rgba(0,0,0,0.25);border:1px solid var(–border);border-radius:9px;padding:9px 13px;font-family:‘Playfair Display’,serif;font-style:italic;font-size:0.86rem;color:var(–cream);line-height:1.4;}
+.q-emp{background:rgba(0,0,0,0.15);border:1.5px dashed var(–border);border-radius:9px;padding:9px 13px;font-size:0.62rem;color:var(–muted);text-align:center;}
 
 /* BUCKET */
-.bucket-add{background:var(–card);border:1px solid var(–border);border-radius:16px;padding:16px;margin-bottom:18px;display:flex;gap:10px;align-items:flex-end;}
-.bucket-add input{flex:1;margin:0;}
-.bucket-add-btn{padding:12px 16px;background:var(–rose);border:none;border-radius:10px;color:var(–cream);font-size:1.1rem;cursor:pointer;flex-shrink:0;transition:all 0.2s;-webkit-tap-highlight-color:transparent;}
-.bucket-add-btn:active{transform:scale(0.95);}
-.bucket-item{display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(–card);border:1px solid var(–border);border-radius:14px;margin-bottom:8px;animation:fadeUp 0.3s ease;transition:opacity 0.2s;}
-.bucket-item.done-item{opacity:0.45;}
-.bucket-check{width:22px;height:22px;border-radius:50%;border:1.5px solid var(–border2);background:transparent;flex-shrink:0;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;font-size:0.75rem;-webkit-tap-highlight-color:transparent;}
-.bucket-check.checked{background:var(–rose);border-color:var(–rose);color:white;}
-.bucket-text{flex:1;font-size:0.88rem;color:var(–cream);min-width:0;}
-.bucket-item.done-item .bucket-text{text-decoration:line-through;color:var(–muted);}
-.bucket-del{background:none;border:none;color:var(–muted);cursor:pointer;font-size:0.9rem;padding:4px;-webkit-tap-highlight-color:transparent;flex-shrink:0;}
+.badd{display:flex;gap:9px;margin-bottom:14px;}
+.badd input{flex:1;}
+.bab{padding:11px 15px;background:var(–rose);border:none;border-radius:10px;color:var(–cream);font-size:1.2rem;cursor:pointer;flex-shrink:0;-webkit-tap-highlight-color:transparent;}
+.bab:active{opacity:0.8;}
+.bi{display:flex;align-items:center;gap:11px;padding:12px 13px;background:var(–card);border:1px solid var(–border);border-radius:12px;margin-bottom:7px;animation:fu 0.3s ease;}
+.bi.di{opacity:0.45;}
+.bc{width:21px;height:21px;border-radius:50%;border:1.5px solid var(–border2);background:transparent;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.72rem;-webkit-tap-highlight-color:transparent;transition:all 0.2s;}
+.bc.ck{background:var(–rose);border-color:var(–rose);color:white;}
+.bt{flex:1;font-size:0.87rem;color:var(–cream);min-width:0;}
+.bi.di .bt{text-decoration:line-through;color:var(–muted);}
+.bdel{background:none;border:none;color:var(–muted);cursor:pointer;font-size:0.88rem;padding:4px;flex-shrink:0;-webkit-tap-highlight-color:transparent;}
 
 /* GAMES */
-.games-tabs{display:flex;gap:6px;margin-bottom:20px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;}
-.games-tabs::-webkit-scrollbar{display:none;}
-.gtab{padding:8px 16px;border-radius:100px;border:1.5px solid var(–border);background:transparent;color:var(–muted);font-family:‘DM Sans’,sans-serif;font-size:0.62rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;white-space:nowrap;-webkit-tap-highlight-color:transparent;}
+.gtabs{display:flex;gap:5px;margin-bottom:16px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;}
+.gtabs::-webkit-scrollbar{display:none;}
+.gtab{padding:7px 13px;border-radius:100px;border:1.5px solid var(–border);background:transparent;color:var(–muted);font-family:‘DM Sans’,sans-serif;font-size:0.58rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;white-space:nowrap;-webkit-tap-highlight-color:transparent;}
 .gtab.active{background:rgba(196,96,122,0.15);border-color:var(–rose);color:var(–rose2);}
-.gpanel{display:none;}.gpanel.active{display:block;}
-.gcard{background:linear-gradient(160deg,#1c1020,#2a1535);border:1px solid rgba(196,96,122,0.2);border-radius:20px;padding:28px 22px;margin-bottom:16px;text-align:center;}
-.gcard-q{font-family:‘Playfair Display’,serif;font-style:italic;font-size:1.25rem;color:var(–cream);line-height:1.4;margin-bottom:24px;}
-.gcard-opts{display:flex;flex-direction:column;gap:10px;}
-.gcard-opt{padding:14px;border:1.5px solid rgba(245,237,224,0.15);border-radius:12px;background:rgba(0,0,0,0.2);color:var(–cream);font-family:‘DM Sans’,sans-serif;font-size:0.85rem;cursor:pointer;transition:all 0.2s;-webkit-tap-highlight-color:transparent;text-align:center;}
-.gcard-opt:active{transform:scale(0.97);}.gcard-opt.chosen{border-color:var(–rose);background:rgba(196,96,122,0.15);}
-.gcard-2col{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.gcard-reveal{margin-top:14px;padding:12px;background:rgba(201,148,90,0.1);border:1px solid rgba(201,148,90,0.2);border-radius:10px;font-size:0.78rem;color:var(–gold2);opacity:0;transition:opacity 0.4s;}
-.gcard-reveal.show{opacity:1;}
-.td-toggle{display:flex;gap:8px;justify-content:center;margin-bottom:18px;}
-.td-btn{padding:10px 28px;border-radius:100px;border:1.5px solid var(–border);background:transparent;font-family:‘DM Sans’,sans-serif;font-size:0.68rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(–muted);cursor:pointer;transition:all 0.2s;}
-.td-btn.active{background:var(–rose);border-color:var(–rose);color:white;}
-.td-card{background:linear-gradient(160deg,#1c1020,#2a1535);border:1px solid rgba(196,96,122,0.2);border-radius:20px;padding:36px 24px;text-align:center;min-height:160px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;}
-.td-text{font-family:‘Playfair Display’,serif;font-style:italic;font-size:1.2rem;color:var(–cream);line-height:1.5;}
+.gp{display:none;}.gp.active{display:block;}
+.gc{background:linear-gradient(160deg,#1c1020,#2a1535);border:1px solid rgba(196,96,122,0.2);border-radius:18px;padding:22px 18px;margin-bottom:13px;text-align:center;}
+.gcq{font-family:‘Playfair Display’,serif;font-style:italic;font-size:1.1rem;color:var(–cream);line-height:1.4;margin-bottom:18px;}
+.gco{display:flex;flex-direction:column;gap:9px;}
+.gopt{padding:12px;border:1.5px solid rgba(245,237,224,0.15);border-radius:11px;background:rgba(0,0,0,0.2);color:var(–cream);font-family:‘DM Sans’,sans-serif;font-size:0.84rem;cursor:pointer;-webkit-tap-highlight-color:transparent;text-align:center;}
+.gopt:active{opacity:0.7;}.gopt.ch{border-color:var(–rose);background:rgba(196,96,122,0.15);}
+.g2col{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+.grev{margin-top:12px;padding:10px;background:rgba(201,148,90,0.1);border:1px solid rgba(201,148,90,0.2);border-radius:9px;font-size:0.74rem;color:var(–gold2);opacity:0;transition:opacity 0.4s;}
+.grev.show{opacity:1;}
+.tdtog{display:flex;gap:8px;justify-content:center;margin-bottom:14px;}
+.tdbtn{padding:9px 24px;border-radius:100px;border:1.5px solid var(–border);background:transparent;font-family:‘DM Sans’,sans-serif;font-size:0.64rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(–muted);cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.tdbtn.active{background:var(–rose);border-color:var(–rose);color:white;}
+.tdcard{background:linear-gradient(160deg,#1c1020,#2a1535);border:1px solid rgba(196,96,122,0.2);border-radius:18px;padding:30px 20px;text-align:center;min-height:145px;display:flex;align-items:center;justify-content:center;margin-bottom:13px;}
+.tdtxt{font-family:‘Playfair Display’,serif;font-style:italic;font-size:1.1rem;color:var(–cream);line-height:1.5;}
 
 /* MEMORIES */
-.mem-form{background:var(–card);border:1px solid var(–border);border-radius:16px;padding:18px;margin-bottom:20px;display:flex;flex-direction:column;gap:12px;}
-.mem-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.mem-card{border-radius:14px;overflow:hidden;border:1px solid var(–border);animation:fadeUp 0.3s ease;}
-.mem-img{width:100%;aspect-ratio:1;object-fit:cover;background:var(–bg3);display:block;}
-.mem-placeholder{width:100%;aspect-ratio:1;background:linear-gradient(135deg,var(–bg2),var(–bg3));display:flex;align-items:center;justify-content:center;font-size:2rem;}
-.mem-info{padding:10px;}
-.mem-cap{font-family:‘Playfair Display’,serif;font-style:italic;font-size:0.82rem;color:var(–cream);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:3px;}
-.mem-dt{font-size:0.52rem;letter-spacing:0.08em;color:var(–muted);}
-
-/* SYNC indicator */
-.sync-dot{width:6px;height:6px;border-radius:50%;background:var(–muted);display:inline-block;margin-left:6px;transition:background 0.3s;}
-.sync-dot.syncing{background:var(–gold);animation:pulse 1s infinite;}
-.sync-dot.synced{background:#4caf50;}
-.sync-dot.error{background:#ef5350;}
-@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.mform{background:var(–card);border:1px solid var(–border);border-radius:14px;padding:15px;margin-bottom:16px;display:flex;flex-direction:column;gap:11px;}
+.mgr{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+.mcard{border-radius:12px;overflow:hidden;border:1px solid var(–border);animation:fu 0.3s ease;}
+.mimg{width:100%;aspect-ratio:1;object-fit:cover;background:var(–bg3);display:block;}
+.mpl{width:100%;aspect-ratio:1;background:linear-gradient(135deg,var(–bg2),var(–bg3));display:flex;align-items:center;justify-content:center;font-size:2rem;}
+.minfo{padding:8px 10px;}
+.mcap{font-family:‘Playfair Display’,serif;font-style:italic;font-size:0.78rem;color:var(–cream);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:2px;}
+.mdt{font-size:0.48rem;letter-spacing:0.08em;color:var(–muted);}
 
 /* EMPTY */
-.empty{text-align:center;padding:40px 20px;}
-.empty-icon{font-size:2.2rem;display:block;margin-bottom:10px;opacity:0.4;}
-.empty-txt{font-size:0.75rem;color:var(–muted);line-height:1.7;}
+.empty{text-align:center;padding:34px 18px;}
+.empty-icon{font-size:1.9rem;display:block;margin-bottom:9px;opacity:0.4;}
+.empty-txt{font-size:0.74rem;color:var(–muted);line-height:1.7;}
 
 /* TOAST */
-.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:var(–card);border:1px solid var(–border2);color:var(–cream);padding:10px 22px;border-radius:100px;font-size:0.7rem;z-index:800;opacity:0;transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);white-space:nowrap;pointer-events:none;}
+.toast{position:fixed;bottom:82px;left:50%;transform:translateX(-50%) translateY(16px);background:var(–card);border:1px solid var(–border2);color:var(–cream);padding:10px 20px;border-radius:100px;font-size:0.68rem;z-index:800;opacity:0;transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);white-space:nowrap;pointer-events:none;max-width:88vw;overflow:hidden;text-overflow:ellipsis;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-.mb12{margin-bottom:12px;}
 </style>
 
 </head>
@@ -222,50 +211,48 @@ textarea:focus,input:focus{border-color:var(–gold);}
 <!-- SPLASH -->
 
 <div id="splash">
-  <span class="splash-heart">♡</span>
+  <span class="splash-heart">&#9825;</span>
   <div class="splash-names">
-    <div class="n1">Oyindamola</div>
-    <div class="amp">&</div>
-    <div class="n2">Mofeyisayomi</div>
+    <span class="n1">Oyindamola</span>
+    <span class="amp">&amp;</span>
+    <span class="n2">Mofeyisayomi</span>
   </div>
   <div class="splash-tagline">your little love app</div>
   <div class="splash-input-wrap">
     <div>
-      <span class="splash-label">I am</span>
+      <span class="splash-lbl">I am</span>
       <div class="splash-who">
-        <button class="who-btn" data-who="oyin" onclick="selectWho('oyin')">Oyindamola</button>
-        <button class="who-btn" data-who="mofe" onclick="selectWho('mofe')">Mofeyisayomi</button>
+        <button class="who-btn" data-who="oyin" onclick="pickWho('oyin')">Oyindamola</button>
+        <button class="who-btn" data-who="mofe" onclick="pickWho('mofe')">Mofeyisayomi</button>
       </div>
     </div>
     <div>
-      <span class="splash-label">Next time we see each other</span>
+      <span class="splash-lbl">Next time we see each other</span>
       <input class="splash-input" id="meetDate" type="date"/>
     </div>
     <div>
-      <span class="splash-label">We started dating</span>
+      <span class="splash-lbl">We started dating</span>
       <input class="splash-input" id="startDate" type="date"/>
     </div>
-    <button class="splash-btn" onclick="begin()">Open Our Space ♡</button>
+    <button class="splash-btn" onclick="begin()">Open Our Space &#9825;</button>
   </div>
 </div>
 
 <!-- LOADING -->
 
 <div id="loading">
-  <span class="loading-heart">♡</span>
-  <div class="loading-txt">Connecting our space...</div>
+  <span class="ld-heart">&#9825;</span>
+  <div class="ld-txt">Connecting our space...</div>
 </div>
 
 <!-- APP -->
 
 <div id="app">
   <div class="hdr">
-    <div class="hdr-names">
-      <span class="h-oyin">Oyin</span><span class="h-amp">&</span><span class="h-mofe">Mofe</span>
-    </div>
-    <div style="display:flex;align-items:center;gap:8px;">
-      <div class="streak-badge" id="hdrStreak">🔥 0 days</div>
-      <div class="sync-dot" id="syncDot" title="Sync status"></div>
+    <div class="hdr-names"><span class="h-oyin">Oyin</span><span class="h-amp">&amp;</span><span class="h-mofe">Mofe</span></div>
+    <div class="hdr-r">
+      <div class="streak-badge" id="hdrStreak">&#128293; 0 days</div>
+      <div class="sync-dot" id="syncDot"></div>
     </div>
   </div>
 
@@ -274,178 +261,163 @@ textarea:focus,input:focus{border-color:var(–gold);}
 ```
 <!-- HOME -->
 <div class="sec active" id="sec-home">
-  <div class="home-hero">
-    <div class="home-who" id="homeWho">Welcome back</div>
-    <div class="home-greeting" id="homeGreeting">Hey, <span id="homeNameSpan">love</span> ♡</div>
+  <div class="hero">
+    <div class="hero-who" id="heroWho">Welcome back</div>
+    <div class="hero-greet">Hey, <span id="heroName" style="color:var(--gold2)">love</span> &#9825;</div>
     <div class="cd-row">
-      <div class="cd-box"><span class="cd-num" id="cdD">--</span><span class="cd-lbl">days</span></div>
-      <div class="cd-box"><span class="cd-num" id="cdH">--</span><span class="cd-lbl">hrs</span></div>
-      <div class="cd-box"><span class="cd-num" id="cdM">--</span><span class="cd-lbl">min</span></div>
-      <div class="cd-box"><span class="cd-num" id="cdS">--</span><span class="cd-lbl">sec</span></div>
+      <div class="cd-box"><span class="cd-n" id="cdD">--</span><span class="cd-l">days</span></div>
+      <div class="cd-box"><span class="cd-n" id="cdH">--</span><span class="cd-l">hrs</span></div>
+      <div class="cd-box"><span class="cd-n" id="cdM">--</span><span class="cd-l">min</span></div>
+      <div class="cd-box"><span class="cd-n" id="cdS">--</span><span class="cd-l">sec</span></div>
     </div>
   </div>
   <div class="stat-row">
-    <div class="stat-card">
-      <div><div class="stat-lbl">Together</div><div class="stat-val" id="statDays">0</div></div>
-      <div class="stat-sub">days of us</div>
-    </div>
-    <div class="stat-card">
-      <div><div class="stat-lbl">Streak</div><div class="stat-val" id="statStreak">0</div></div>
-      <div class="stat-sub">🔥 days running</div>
-    </div>
+    <div class="sc"><div class="sl">Together</div><div class="sv" id="statDays">0</div><div class="ss">days of us</div></div>
+    <div class="sc"><div class="sl">Streak</div><div class="sv" id="statStreak">0</div><div class="ss">&#128293; days running</div></div>
   </div>
-  <div class="qotd-banner" onclick="showTab('sec-qotd','bnav-qotd')">
-    <div class="qotd-tag">✦ Today's question</div>
-    <div class="qotd-text" id="homeQotd">Loading...</div>
-    <div class="qotd-cta">Tap to answer →</div>
+  <div class="qb" onclick="showTab('sec-qotd','nb-qotd')">
+    <div class="qt">&#10022; Today's question</div>
+    <div class="qq" id="homeQ">Loading...</div>
+    <div class="qc">Tap to answer &#8594;</div>
   </div>
-  <div class="full-card">
-    <div class="full-card-lbl">Latest memory</div>
-    <div class="full-card-val" id="homeMemory">No memories yet — add your first moment ♡</div>
-  </div>
+  <div class="fc"><div class="fl">Latest memory</div><div class="fv" id="homeMemory">No memories yet &#9825;</div></div>
 </div>
 
 <!-- MOOD -->
 <div class="sec" id="sec-mood">
-  <div class="sec-hdr"><div class="sec-title">Check In</div><div class="sec-sub">Log your mood & keep the streak alive</div></div>
-  <div class="streak-hero">
-    <span class="streak-num" id="streakNum">0</span>
-    <span class="streak-fire">🔥</span>
-    <div class="streak-desc">consecutive days you've both checked in<br><span id="streakStatus" style="color:var(--gold2)">Check in today!</span></div>
+  <div class="sh"><div class="st">Check In</div><div class="ss2">Log your mood &amp; keep the streak alive</div></div>
+  <div class="sh2">
+    <span class="sn" id="streakN">0</span>
+    <span class="sf">&#128293;</span>
+    <div class="sd">days you've both checked in<br><span id="streakS" style="color:var(--gold2)">Check in today!</span></div>
   </div>
-  <div class="streak-checkin-area">
-    <div class="stat-lbl" style="margin-bottom:10px">Checked in today</div>
-    <div class="streak-who-row">
-      <button class="streak-who-pill" data-who="oyin" id="checkinOyin" onclick="checkin('oyin')">Oyindamola ○</button>
-      <button class="streak-who-pill" data-who="mofe" id="checkinMofe" onclick="checkin('mofe')">Mofeyisayomi ○</button>
+  <div class="sa">
+    <div class="sl" style="margin-bottom:9px">Tap to check in today</div>
+    <div class="srow">
+      <button class="sp" data-who="oyin" id="ciOyin" onclick="checkin('oyin')">Oyindamola &#9675;</button>
+      <button class="sp" data-who="mofe" id="ciMofe" onclick="checkin('mofe')">Mofeyisayomi &#9675;</button>
     </div>
   </div>
-  <div class="input-lbl" style="margin-bottom:10px">Who's logging?</div>
-  <div class="mood-who-tabs">
-    <button class="mood-who-tab active" data-who="oyin" onclick="setMoodWho('oyin',this)">Oyindamola</button>
-    <button class="mood-who-tab" data-who="mofe" onclick="setMoodWho('mofe',this)">Mofeyisayomi</button>
+  <div class="il m12">Who's logging this mood?</div>
+  <div class="wtabs">
+    <button class="wtab active" data-who="oyin" onclick="setMW('oyin',this)">Oyindamola</button>
+    <button class="wtab" data-who="mofe" onclick="setMW('mofe',this)">Mofeyisayomi</button>
   </div>
-  <div class="mood-grid">
-    <button class="mood-btn" onclick="pickMood(this,'😄','Joyful')"><span class="mood-emoji-icon">😄</span><span class="mood-name">Joyful</span></button>
-    <button class="mood-btn" onclick="pickMood(this,'🥰','In love')"><span class="mood-emoji-icon">🥰</span><span class="mood-name">In love</span></button>
-    <button class="mood-btn" onclick="pickMood(this,'😌','Peaceful')"><span class="mood-emoji-icon">😌</span><span class="mood-name">Peaceful</span></button>
-    <button class="mood-btn" onclick="pickMood(this,'🤩','Excited')"><span class="mood-emoji-icon">🤩</span><span class="mood-name">Excited</span></button>
-    <button class="mood-btn" onclick="pickMood(this,'😢','Missing you')"><span class="mood-emoji-icon">😢</span><span class="mood-name">Missing you</span></button>
-    <button class="mood-btn" onclick="pickMood(this,'🥺','Needy')"><span class="mood-emoji-icon">🥺</span><span class="mood-name">Needy</span></button>
-    <button class="mood-btn" onclick="pickMood(this,'😴','Tired')"><span class="mood-emoji-icon">😴</span><span class="mood-name">Tired</span></button>
-    <button class="mood-btn" onclick="pickMood(this,'😤','Stressed')"><span class="mood-emoji-icon">😤</span><span class="mood-name">Stressed</span></button>
+  <div class="mgrid">
+    <button class="mb2" onclick="pickM(this,'&#128516;','Joyful')"><span class="mei">&#128516;</span><span class="mn">Joyful</span></button>
+    <button class="mb2" onclick="pickM(this,'&#129392;','In love')"><span class="mei">&#129392;</span><span class="mn">In love</span></button>
+    <button class="mb2" onclick="pickM(this,'&#128524;','Peaceful')"><span class="mei">&#128524;</span><span class="mn">Peaceful</span></button>
+    <button class="mb2" onclick="pickM(this,'&#129321;','Excited')"><span class="mei">&#129321;</span><span class="mn">Excited</span></button>
+    <button class="mb2" onclick="pickM(this,'&#128514;','Laughing')"><span class="mei">&#128514;</span><span class="mn">Laughing</span></button>
+    <button class="mb2" onclick="pickM(this,'&#128546;','Missing you')"><span class="mei">&#128546;</span><span class="mn">Missing you</span></button>
+    <button class="mb2" onclick="pickM(this,'&#128564;','Tired')"><span class="mei">&#128564;</span><span class="mn">Tired</span></button>
+    <button class="mb2" onclick="pickM(this,'&#128532;','Stressed')"><span class="mei">&#128532;</span><span class="mn">Stressed</span></button>
   </div>
-  <div class="mb12"><span class="input-lbl">Add a note</span><textarea id="moodNote" rows="2" placeholder="What's on your mind?"></textarea></div>
-  <button class="btn-primary" onclick="logMood()">Log Mood</button>
-  <div class="feed-lbl">Mood history — both of you</div>
+  <div class="m12"><span class="il">Add a note (optional)</span><textarea id="moodNote" rows="2" placeholder="What's on your mind?"></textarea></div>
+  <button class="bp" onclick="logMood()">Log Mood</button>
+  <div class="fl2">Mood history — both of you</div>
   <div id="moodFeed"></div>
 </div>
 
 <!-- LETTERS -->
 <div class="sec" id="sec-letters">
-  <div class="sec-hdr"><div class="sec-title">Love Letters</div><div class="sec-sub">Write something from the heart</div></div>
-  <div class="letter-compose">
-    <div class="letter-header"><div class="letter-from">From <span id="letterFromName">—</span></div></div>
-    <div class="mb12"><textarea id="letterBody" rows="5" placeholder="Dear Mofe, today I was thinking about you and..."></textarea></div>
-    <button class="btn-primary" onclick="sendLetter()">Send Letter ♡</button>
+  <div class="sh"><div class="st">Love Letters</div><div class="ss2">Write something from the heart</div></div>
+  <div class="lc">
+    <div class="lf">From <span id="letterFrom">—</span></div>
+    <div class="m12"><textarea id="letterBody" rows="5" placeholder="Write your letter here..."></textarea></div>
+    <button class="bp" onclick="sendLetter()">Send Letter &#9825;</button>
   </div>
-  <div class="feed-lbl">Letters — both of you</div>
+  <div class="fl2">All letters</div>
   <div id="letterFeed"></div>
 </div>
 
 <!-- QOTD -->
 <div class="sec" id="sec-qotd">
-  <div class="sec-hdr"><div class="sec-title">Question of the Day</div><div class="sec-sub">One question, two answers</div></div>
+  <div class="sh"><div class="st">Question of the Day</div><div class="ss2">One question, two answers</div></div>
   <div class="qcard">
-    <div class="qcard-day" id="qotdDay">Question 1</div>
-    <div class="qcard-q" id="qotdQ">Loading...</div>
-    <div class="qcard-answers">
-      <div class="q-answer-wrap">
-        <div class="q-answer-who oyin">Oyindamola</div>
-        <div id="oyinAnswer" class="q-empty">hasn't answered yet</div>
-      </div>
-      <div class="q-answer-wrap">
-        <div class="q-answer-who mofe">Mofeyisayomi</div>
-        <div id="mofeAnswer" class="q-empty">hasn't answered yet</div>
-      </div>
+    <div class="qday" id="qDay">Question 1</div>
+    <div class="qtext" id="qText">Loading...</div>
+    <div class="qans">
+      <div class="qaw"><div class="qawho oyin">Oyindamola</div><div id="oyinAns" class="q-emp">hasn't answered yet</div></div>
+      <div class="qaw"><div class="qawho mofe">Mofeyisayomi</div><div id="mofeAns" class="q-emp">hasn't answered yet</div></div>
     </div>
   </div>
-  <div class="mb12"><span class="input-lbl" id="qotdAnswerLbl">Your answer</span><textarea id="qotdInput" rows="3" placeholder="Type your answer..."></textarea></div>
-  <button class="btn-primary mb12" onclick="submitQotd()">Submit Answer</button>
-  <button class="btn-outline" onclick="nextQotd()">Next Question →</button>
+  <div class="m12"><span class="il" id="qLbl">Your answer</span><textarea id="qInput" rows="3" placeholder="Type your answer..."></textarea></div>
+  <button class="bp m12" onclick="submitQ()">Submit Answer</button>
+  <button class="bo" onclick="nextQ()">Next Question &#8594;</button>
 </div>
 
 <!-- BUCKET -->
 <div class="sec" id="sec-bucket">
-  <div class="sec-hdr"><div class="sec-title">Bucket List</div><div class="sec-sub">Things to do when distance is just a memory</div></div>
-  <div class="bucket-add">
-    <input type="text" id="bucketInput" placeholder="e.g. Watch sunrise together..."/>
-    <button class="bucket-add-btn" onclick="addBucket()">+</button>
+  <div class="sh"><div class="st">Bucket List</div><div class="ss2">Things to do when distance is just a memory</div></div>
+  <div class="badd">
+    <input type="text" id="bucketIn" placeholder="e.g. Watch sunrise together..."/>
+    <button class="bab" onclick="addBucket()">+</button>
   </div>
   <div id="bucketList"></div>
 </div>
 
 <!-- GAMES -->
 <div class="sec" id="sec-games">
-  <div class="sec-hdr"><div class="sec-title">Play Together</div><div class="sec-sub">Open this on a call and play in real time</div></div>
-  <div class="games-tabs">
+  <div class="sh"><div class="st">Play Together</div><div class="ss2">Open this on a call and play in real time</div></div>
+  <div class="gtabs">
     <button class="gtab active" onclick="showGame('g-tot',this)">This or That</button>
     <button class="gtab" onclick="showGame('g-td',this)">Truth or Dare</button>
     <button class="gtab" onclick="showGame('g-wyr',this)">Would You Rather</button>
     <button class="gtab" onclick="showGame('g-quiz',this)">Couple Quiz</button>
   </div>
-  <div class="gpanel active" id="g-tot">
-    <div class="gcard">
-      <div class="gcard-q" id="totQ">Loading...</div>
-      <div class="gcard-2col">
-        <button class="gcard-opt" id="totA" onclick="chooseTot(0)">–</button>
-        <button class="gcard-opt" id="totB" onclick="chooseTot(1)">–</button>
+  <div class="gp active" id="g-tot">
+    <div class="gc">
+      <div class="gcq" id="totQ">Loading...</div>
+      <div class="g2col">
+        <button class="gopt" id="totA" onclick="chooseTot(0)">–</button>
+        <button class="gopt" id="totB" onclick="chooseTot(1)">–</button>
       </div>
-      <div class="gcard-reveal" id="totReveal">You chose! Now ask Mofe 💬</div>
+      <div class="grev" id="totRev">You chose! Now ask Mofe &#128172;</div>
     </div>
-    <button class="btn-outline" onclick="nextTot()">Next →</button>
+    <button class="bo" onclick="nextTot()">Next &#8594;</button>
   </div>
-  <div class="gpanel" id="g-td">
-    <div class="td-toggle">
-      <button class="td-btn active" onclick="setTD('truth',this)">Truth</button>
-      <button class="td-btn" onclick="setTD('dare',this)">Dare</button>
+  <div class="gp" id="g-td">
+    <div class="tdtog">
+      <button class="tdbtn active" onclick="setTD('truth',this)">Truth</button>
+      <button class="tdbtn" onclick="setTD('dare',this)">Dare</button>
     </div>
-    <div class="td-card"><div class="td-text" id="tdText">Tap below for a card ✨</div></div>
-    <button class="btn-primary mb12" onclick="drawTD()">Draw Card</button>
-    <button class="btn-outline" onclick="drawTD()">Another →</button>
+    <div class="tdcard"><div class="tdtxt" id="tdTxt">Tap below for a card &#10024;</div></div>
+    <button class="bp m12" onclick="drawTD()">Draw Card</button>
+    <button class="bo" onclick="drawTD()">Another &#8594;</button>
   </div>
-  <div class="gpanel" id="g-wyr">
-    <div class="gcard" style="background:linear-gradient(160deg,#1a0f10,#2a1515)">
-      <div class="gcard-q" id="wyrQ">Loading...</div>
-      <div class="gcard-opts">
-        <button class="gcard-opt" id="wyrA" onclick="chooseWyr(0)">–</button>
-        <button class="gcard-opt" id="wyrB" onclick="chooseWyr(1)">–</button>
+  <div class="gp" id="g-wyr">
+    <div class="gc" style="background:linear-gradient(160deg,#1a0f10,#2a1515)">
+      <div class="gcq" id="wyrQ">Loading...</div>
+      <div class="gco">
+        <button class="gopt" id="wyrA" onclick="chooseWyr(0)">–</button>
+        <button class="gopt" id="wyrB" onclick="chooseWyr(1)">–</button>
       </div>
-      <div class="gcard-reveal" id="wyrReveal">You picked! Now ask Mofe 💬</div>
+      <div class="grev" id="wyrRev">You picked! Now ask Mofe &#128172;</div>
     </div>
-    <button class="btn-outline" onclick="nextWyr()">Next →</button>
+    <button class="bo" onclick="nextWyr()">Next &#8594;</button>
   </div>
-  <div class="gpanel" id="g-quiz">
-    <div class="gcard" style="padding:24px 20px;text-align:left">
-      <div class="gcard-q" style="text-align:center;font-size:1.1rem" id="quizQ">Loading...</div>
-      <div class="gcard-opts" id="quizOpts"></div>
-      <div class="gcard-reveal" id="quizReveal" style="text-align:center">Now ask your partner the same! 💬</div>
+  <div class="gp" id="g-quiz">
+    <div class="gc" style="text-align:left;padding:20px 16px">
+      <div class="gcq" style="text-align:center" id="quizQ">Loading...</div>
+      <div class="gco" id="quizOpts"></div>
+      <div class="grev" id="quizRev" style="text-align:center">Now ask your partner! &#128172;</div>
     </div>
-    <button class="btn-outline" onclick="nextQuiz()">Next →</button>
+    <button class="bo" onclick="nextQuiz()">Next &#8594;</button>
   </div>
 </div>
 
 <!-- MEMORIES -->
 <div class="sec" id="sec-memories">
-  <div class="sec-hdr"><div class="sec-title">Memory Jar</div><div class="sec-sub">Every moment worth keeping</div></div>
-  <div class="mem-form">
-    <div><span class="input-lbl">Caption</span><input type="text" id="memCap" placeholder="e.g. The night we stayed up till 3am..."/></div>
-    <div><span class="input-lbl">Date</span><input type="date" id="memDate"/></div>
-    <div><span class="input-lbl">Photo URL (optional)</span><input type="url" id="memUrl" placeholder="Paste image link..."/></div>
-    <button class="btn-primary" onclick="addMemory()">Add Memory ♡</button>
+  <div class="sh"><div class="st">Memory Jar</div><div class="ss2">Every moment worth keeping</div></div>
+  <div class="mform">
+    <div><span class="il">Caption</span><input type="text" id="memCap" placeholder="e.g. The night we stayed up till 3am..."/></div>
+    <div><span class="il">Date</span><input type="date" id="memDate"/></div>
+    <div><span class="il">Photo URL (optional)</span><input type="url" id="memUrl" placeholder="Paste image link..."/></div>
+    <button class="bp" onclick="addMemory()">Add Memory &#9825;</button>
   </div>
-  <div class="mem-grid" id="memGrid">
-    <div class="empty" style="grid-column:1/-1"><span class="empty-icon">📸</span><div class="empty-txt">Memory jar is empty.<br>Add your first moment.</div></div>
+  <div class="mgr" id="memGrid">
+    <div class="empty" style="grid-column:1/-1"><span class="empty-icon">&#128247;</span><div class="empty-txt">Memory jar is empty.<br>Add your first moment.</div></div>
   </div>
 </div>
 ```
@@ -453,13 +425,13 @@ textarea:focus,input:focus{border-color:var(–gold);}
   </div>
 
   <nav class="bnav">
-    <button class="bnav-btn active" id="bnav-home" onclick="showTab('sec-home','bnav-home')"><span class="bnav-icon">🏠</span><span class="bnav-lbl">Home</span></button>
-    <button class="bnav-btn" id="bnav-mood" onclick="showTab('sec-mood','bnav-mood')"><span class="bnav-icon">💭</span><span class="bnav-lbl">Mood</span></button>
-    <button class="bnav-btn" id="bnav-letters" onclick="showTab('sec-letters','bnav-letters')"><span class="bnav-icon">✉️</span><span class="bnav-lbl">Letters</span></button>
-    <button class="bnav-btn" id="bnav-qotd" onclick="showTab('sec-qotd','bnav-qotd')"><span class="bnav-icon">💬</span><span class="bnav-lbl">Q&A</span></button>
-    <button class="bnav-btn" id="bnav-bucket" onclick="showTab('sec-bucket','bnav-bucket')"><span class="bnav-icon">🌙</span><span class="bnav-lbl">Bucket</span></button>
-    <button class="bnav-btn" id="bnav-games" onclick="showTab('sec-games','bnav-games')"><span class="bnav-icon">🎮</span><span class="bnav-lbl">Games</span></button>
-    <button class="bnav-btn" id="bnav-memories" onclick="showTab('sec-memories','bnav-memories')"><span class="bnav-icon">📸</span><span class="bnav-lbl">Memories</span></button>
+    <button class="nb active" id="nb-home" onclick="showTab('sec-home','nb-home')"><span class="ni">&#127968;</span><span class="nl">Home</span></button>
+    <button class="nb" id="nb-mood" onclick="showTab('sec-mood','nb-mood')"><span class="ni">&#128172;</span><span class="nl">Mood</span></button>
+    <button class="nb" id="nb-letters" onclick="showTab('sec-letters','nb-letters')"><span class="ni">&#9993;&#65039;</span><span class="nl">Letters</span></button>
+    <button class="nb" id="nb-qotd" onclick="showTab('sec-qotd','nb-qotd')"><span class="ni">&#128172;</span><span class="nl">Q&amp;A</span></button>
+    <button class="nb" id="nb-bucket" onclick="showTab('sec-bucket','nb-bucket')"><span class="ni">&#127769;</span><span class="nl">Bucket</span></button>
+    <button class="nb" id="nb-games" onclick="showTab('sec-games','nb-games')"><span class="ni">&#127918;</span><span class="nl">Games</span></button>
+    <button class="nb" id="nb-memories" onclick="showTab('sec-memories','nb-memories')"><span class="ni">&#128247;</span><span class="nl">Memories</span></button>
   </nav>
 </div>
 
@@ -467,296 +439,264 @@ textarea:focus,input:focus{border-color:var(–gold);}
 
 <script>
 // ── SUPABASE ──
-const SUPA_URL = 'https://gxdzzysxpoeluvouqogg.supabase.co';
-const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd4ZHp6eXN4cG9lbHV2b3VxZ2dnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM5MTcxNjUsImV4cCI6MjA2OTQ5MzE2NX0.CIy3PIPHJoX772RRRB_MeZ523pUF1HNIXEH01nzPyHQ';
-const sb = supabase.createClient(SUPA_URL, SUPA_KEY);
+const { createClient } = supabase;
+const sb = createClient(
+  'https://gxdzzysxpoeluvouqogg.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd4ZHp6eXN4cG9lbHV2b3VxZ2dnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM5MTcxNjUsImV4cCI6MjA2OTQ5MzE2NX0.CIy3PIPHJoX772RRRB_MeZ523pUF1HNIXEH01nzPyHQ'
+);
 
-// ── LOCAL STATE (non-synced) ──
-let WHO = null;
-let MEET_DATE = '';
-let START_DATE = '';
-let QOTD_IDX = 0;
-let tdMode = 'truth';
-let totIdx = 0, wyrIdx = 0, quizIdx = 0;
-let pickedMood = null, moodWho = 'oyin';
+// ── STATE ──
+let WHO = null, MEET_DATE = '', START_DATE = '', QI = 0;
+let moodWho = 'oyin', pickedMood = null;
+let tdMode = 'truth', totI = 0, wyrI = 0, quizI = 0;
+const N = { oyin: 'Oyindamola', mofe: 'Mofeyisayomi' };
+const S = { oyin: 'Oyin', mofe: 'Mofe' };
 
-const NAMES = { oyin: 'Oyindamola', mofe: 'Mofeyisayomi' };
-const SHORT  = { oyin: 'Oyin', mofe: 'Mofe' };
-
-function saveLocal() {
-  localStorage.setItem('om_who', WHO || '');
+function saveL() {
+  localStorage.setItem('om_who', WHO||'');
   localStorage.setItem('om_meet', MEET_DATE);
   localStorage.setItem('om_start', START_DATE);
-  localStorage.setItem('om_qidx', QOTD_IDX);
+  localStorage.setItem('om_qi', QI);
 }
-
-function loadLocal() {
+function loadL() {
   WHO = localStorage.getItem('om_who') || null;
   MEET_DATE = localStorage.getItem('om_meet') || '';
   START_DATE = localStorage.getItem('om_start') || '';
-  QOTD_IDX = parseInt(localStorage.getItem('om_qidx') || '0');
+  QI = parseInt(localStorage.getItem('om_qi') || '0');
 }
 
-// ── SYNC DOT ──
-function setSyncDot(state) {
+function dot(s) {
   const d = document.getElementById('syncDot');
-  d.className = 'sync-dot ' + state;
+  if (!d) return;
+  d.className = 'sync-dot' + (s==='sy'?' sy':s==='er'?' er':'');
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._t); t._t = setTimeout(()=>t.classList.remove('show'), 3000);
 }
 
 // ── SPLASH ──
 let chosenWho = null;
-function selectWho(w) {
+function pickWho(w) {
   chosenWho = w;
-  document.querySelectorAll('.who-btn').forEach(b => b.classList.remove('selected'));
-  document.querySelector(`.who-btn[data-who="${w}"]`).classList.add('selected');
+  document.querySelectorAll('.who-btn').forEach(b=>b.classList.remove('sel'));
+  document.querySelector('.who-btn[data-who="'+w+'"]').classList.add('sel');
 }
 
 function begin() {
-  if (!chosenWho) return toast('Tell us who you are ♡');
+  if (!chosenWho) return toast('Choose who you are first ♡');
   WHO = chosenWho;
   MEET_DATE = document.getElementById('meetDate').value;
   START_DATE = document.getElementById('startDate').value;
-  saveLocal();
-  launchApp();
+  saveL(); launchApp();
 }
 
 // ── LAUNCH ──
 async function launchApp() {
   document.getElementById('splash').style.display = 'none';
-  document.getElementById('loading').style.display = 'flex';
-  setSyncDot('syncing');
+  const ld = document.getElementById('loading');
+  ld.style.display = 'flex'; dot('sy');
+  try {
+    await ensureStreak();
+    ld.style.display = 'none';
+    document.getElementById('app').style.display = 'flex';
+    initUI();
+    await refreshAll();
+    setInterval(updateCd, 1000);
+    setInterval(async ()=>{ dot('sy'); try{ await refreshAll(); dot(''); }catch(e){ dot('er'); }}, 20000);
+    dot('');
+  } catch(e) {
+    console.error('Launch error:', e);
+    ld.style.display = 'none';
+    document.getElementById('app').style.display = 'flex';
+    initUI(); dot('er');
+    toast('Connection issue — some features may not sync');
+  }
+}
 
-  // ensure streak row exists
-  await ensureStreak();
+function initUI() {
+  const name = S[WHO] || 'love';
+  document.getElementById('heroWho').textContent = 'Welcome back, ' + name;
+  document.getElementById('heroName').textContent = name;
+  document.getElementById('heroName').style.color = WHO==='oyin'?'var(--gold2)':'var(--rose2)';
+  document.getElementById('letterFrom').textContent = N[WHO];
+  document.getElementById('letterFrom').style.color = WHO==='oyin'?'var(--gold2)':'var(--rose2)';
+  document.getElementById('qLbl').textContent = N[WHO] + "'s answer";
+  if (START_DATE) {
+    const d = Math.max(0, Math.floor((Date.now()-new Date(START_DATE))/86400000));
+    document.getElementById('statDays').textContent = d;
+  }
+  initGames();
+  updateQDisplay();
+}
 
-  document.getElementById('loading').style.display = 'none';
-  document.getElementById('app').style.display = 'flex';
-
-  refreshAll();
-  setInterval(updateCd, 1000);
-  // live updates every 15 seconds
-  setInterval(refreshFromDB, 15000);
-  setSyncDot('synced');
+async function refreshAll() {
+  await Promise.all([loadMoods(), loadLetters(), loadMemories(), loadBucket(), loadStreak(), loadQotd()]);
 }
 
 // ── TABS ──
-function showTab(secId, navId) {
-  document.querySelectorAll('.sec').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.bnav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById(secId).classList.add('active');
-  document.getElementById(navId).classList.add('active');
+function showTab(sid, nid) {
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));
+  document.getElementById(sid).classList.add('active');
+  document.getElementById(nid).classList.add('active');
   document.getElementById('mainScroll').scrollTop = 0;
 }
 
-// ── REFRESH ALL ──
-async function refreshAll() {
-  updateHomeStatic();
-  updateCd();
-  await Promise.all([
-    loadMoods(),
-    loadLetters(),
-    loadMemories(),
-    loadBucket(),
-    loadStreak(),
-    loadQotd(),
-  ]);
-  updateHome();
-  initGames();
-}
-
-async function refreshFromDB() {
-  setSyncDot('syncing');
-  await Promise.all([loadMoods(), loadLetters(), loadMemories(), loadBucket(), loadStreak(), loadQotd()]);
-  updateHome();
-  setSyncDot('synced');
-}
-
-// ── HOME ──
-function updateHomeStatic() {
-  const name = SHORT[WHO] || 'love';
-  document.getElementById('homeWho').textContent = `Welcome back, ${name}`;
-  document.getElementById('homeNameSpan').textContent = name;
-  document.getElementById('homeNameSpan').style.color = WHO === 'oyin' ? 'var(--gold2)' : 'var(--rose2)';
-  document.getElementById('letterFromName').textContent = NAMES[WHO];
-  document.getElementById('letterFromName').style.color = WHO === 'oyin' ? 'var(--gold2)' : 'var(--rose2)';
-  document.getElementById('qotdAnswerLbl').textContent = `${NAMES[WHO]}'s answer`;
-  if (START_DATE) {
-    const d = Math.floor((Date.now() - new Date(START_DATE)) / 86400000);
-    document.getElementById('statDays').textContent = d;
-  }
-  const q = QUESTIONS[QOTD_IDX % QUESTIONS.length];
-  document.getElementById('homeQotd').textContent = q;
-  document.getElementById('qotdDay').textContent = `Question ${QOTD_IDX + 1}`;
-  document.getElementById('qotdQ').textContent = q;
-}
-
-function updateHome() {
-  updateHomeStatic();
-}
-
+// ── COUNTDOWN ──
 function updateCd() {
   if (!MEET_DATE) return;
   const diff = new Date(MEET_DATE) - Date.now();
-  if (diff <= 0) { ['cdD','cdH','cdM','cdS'].forEach(id => document.getElementById(id).textContent = '0'); return; }
-  document.getElementById('cdD').textContent = Math.floor(diff / 86400000);
-  document.getElementById('cdH').textContent = Math.floor((diff % 86400000) / 3600000);
-  document.getElementById('cdM').textContent = Math.floor((diff % 3600000) / 60000);
-  document.getElementById('cdS').textContent = Math.floor((diff % 60000) / 1000);
+  if (diff <= 0) { ['cdD','cdH','cdM','cdS'].forEach(id=>document.getElementById(id).textContent='0'); return; }
+  document.getElementById('cdD').textContent = Math.floor(diff/86400000);
+  document.getElementById('cdH').textContent = Math.floor((diff%86400000)/3600000);
+  document.getElementById('cdM').textContent = Math.floor((diff%3600000)/60000);
+  document.getElementById('cdS').textContent = Math.floor((diff%60000)/1000);
 }
 
 // ── STREAK ──
-function todayStr() { return new Date().toISOString().slice(0, 10); }
+function today() { return new Date().toISOString().slice(0,10); }
 
 async function ensureStreak() {
-  const { data } = await sb.from('oyin_mofe_streak').select('*').limit(1);
-  if (!data || data.length === 0) {
-    await sb.from('oyin_mofe_streak').insert({ oyin_checked: false, mofe_checked: false, streak_count: 0, last_date: '' });
+  const { data, error } = await sb.from('oyin_mofe_streak').select('id').limit(1);
+  if (error) throw error;
+  if (!data || !data.length) {
+    const { error: e2 } = await sb.from('oyin_mofe_streak').insert([{oyin_checked:false,mofe_checked:false,streak_count:0,last_date:''}]);
+    if (e2) throw e2;
   }
 }
 
 async function loadStreak() {
-  const { data } = await sb.from('oyin_mofe_streak').select('*').limit(1);
-  if (!data || !data.length) return;
-  const row = data[0];
+  const { data, error } = await sb.from('oyin_mofe_streak').select('*').limit(1);
+  if (error || !data || !data.length) return;
+  let row = data[0];
+  const td = today();
 
-  // reset if new day
-  if (row.last_date !== todayStr() && row.last_date !== '') {
-    const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
-    const yStr = yesterday.toISOString().slice(0, 10);
-    if (row.last_date !== yStr) {
-      // missed a day — reset streak
-      await sb.from('oyin_mofe_streak').update({ oyin_checked: false, mofe_checked: false, streak_count: 0 }).eq('id', row.id);
-      row.streak_count = 0; row.oyin_checked = false; row.mofe_checked = false;
-    } else if (row.oyin_checked && row.mofe_checked) {
-      // both checked in yesterday, new day starts
-      await sb.from('oyin_mofe_streak').update({ oyin_checked: false, mofe_checked: false }).eq('id', row.id);
-      row.oyin_checked = false; row.mofe_checked = false;
+  // Handle day change
+  if (row.last_date && row.last_date !== td) {
+    const yest = new Date(); yest.setDate(yest.getDate()-1);
+    const ys = yest.toISOString().slice(0,10);
+    if (row.last_date < ys) {
+      // missed a day — reset
+      await sb.from('oyin_mofe_streak').update({oyin_checked:false,mofe_checked:false,streak_count:0,last_date:td}).eq('id',row.id);
+      row = {...row, oyin_checked:false, mofe_checked:false, streak_count:0};
+    } else {
+      // new day normally
+      await sb.from('oyin_mofe_streak').update({oyin_checked:false,mofe_checked:false}).eq('id',row.id);
+      row = {...row, oyin_checked:false, mofe_checked:false};
     }
   }
 
-  const count = row.streak_count || 0;
-  document.getElementById('streakNum').textContent = count;
-  document.getElementById('statStreak').textContent = count;
-  document.getElementById('hdrStreak').textContent = `🔥 ${count} day${count !== 1 ? 's' : ''}`;
+  const cnt = row.streak_count||0;
+  document.getElementById('streakN').textContent = cnt;
+  document.getElementById('statStreak').textContent = cnt;
+  document.getElementById('hdrStreak').textContent = '🔥 '+cnt+' day'+(cnt!==1?'s':'');
 
   const both = row.oyin_checked && row.mofe_checked;
   const either = row.oyin_checked || row.mofe_checked;
-  document.getElementById('streakStatus').textContent = both
-    ? 'You both checked in today ♡'
-    : either ? 'One down, one to go!'
+  document.getElementById('streakS').textContent = both
+    ? 'You both checked in today ♡ See you tomorrow!'
+    : either ? 'One down, one to go — keep it alive!'
     : 'Check in today to keep the streak!';
 
-  ['oyin','mofe'].forEach(w => {
-    const btn = document.getElementById(`checkin${w.charAt(0).toUpperCase()+w.slice(1)}`);
-    if (row[`${w}_checked`]) { btn.classList.add('done'); btn.textContent = `${NAMES[w]} ✓`; }
-    else { btn.classList.remove('done'); btn.textContent = `${NAMES[w]} ○`; }
+  ['oyin','mofe'].forEach(w=>{
+    const btn = document.getElementById('ci'+w.charAt(0).toUpperCase()+w.slice(1));
+    if (!btn) return;
+    const ck = row[w+'_checked'];
+    btn.textContent = N[w] + (ck ? ' ✓' : ' ○');
+    btn.className = 'sp'+(ck?' done '+(w==='oyin'?'co':'cm'):'');
+    btn.setAttribute('data-who', w);
   });
 }
 
 async function checkin(who) {
-  setSyncDot('syncing');
-  const { data } = await sb.from('oyin_mofe_streak').select('*').limit(1);
-  if (!data || !data.length) return;
-  const row = data[0];
-
-  if (row[`${who}_checked`]) { toast(`${SHORT[who]} already checked in today ✓`); setSyncDot('synced'); return; }
-
-  const update = { [`${who}_checked`]: true };
-  const otherChecked = who === 'oyin' ? row.mofe_checked : row.oyin_checked;
-
-  if (otherChecked) {
-    update.streak_count = (row.streak_count || 0) + 1;
-    update.last_date = todayStr();
-    toast(`🔥 Streak! Day ${update.streak_count} — both checked in!`);
-  } else {
-    toast(`${SHORT[who]} checked in ✓ Waiting for ${who === 'oyin' ? 'Mofe' : 'Oyin'}!`);
-  }
-
-  await sb.from('oyin_mofe_streak').update(update).eq('id', row.id);
-  await loadStreak();
-  setSyncDot('synced');
+  dot('sy');
+  try {
+    const { data, error } = await sb.from('oyin_mofe_streak').select('*').limit(1);
+    if (error || !data || !data.length) { dot('er'); return; }
+    const row = data[0];
+    if (row[who+'_checked']) { toast(S[who]+' already checked in today ✓'); dot(''); return; }
+    const td = today();
+    const otherCk = who==='oyin' ? row.mofe_checked : row.oyin_checked;
+    const upd = { [who+'_checked']: true, last_date: td };
+    if (otherCk) {
+      upd.streak_count = (row.streak_count||0)+1;
+      toast('🔥 Streak! Day '+upd.streak_count+' — both checked in!');
+    } else {
+      toast(S[who]+' checked in ✓ Waiting for '+(who==='oyin'?'Mofe':'Oyin')+'!');
+    }
+    await sb.from('oyin_mofe_streak').update(upd).eq('id', row.id);
+    await loadStreak(); dot('');
+  } catch(e) { dot('er'); toast('Error — check your connection'); }
 }
 
 // ── MOOD ──
-function setMoodWho(w, btn) {
+function setMW(w, btn) {
   moodWho = w;
-  document.querySelectorAll('.mood-who-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.wtab').forEach(t=>t.classList.remove('active'));
   btn.classList.add('active');
 }
 
-function pickMood(btn, emoji, label) {
-  document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('sel'));
+function pickM(btn, emoji, label) {
+  document.querySelectorAll('.mb2').forEach(b=>b.classList.remove('sel'));
   btn.classList.add('sel');
   pickedMood = { emoji, label };
 }
 
 async function logMood() {
   if (!pickedMood) return toast('Pick a mood first ♡');
-  setSyncDot('syncing');
-  const note = document.getElementById('moodNote').value.trim();
-  const { error } = await sb.from('oyin_mofe_moods').insert({ who: moodWho, emoji: pickedMood.emoji, label: pickedMood.label, note });
-  if (error) { toast('Error saving mood — try again'); setSyncDot('error'); return; }
-  pickedMood = null;
-  document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('sel'));
-  document.getElementById('moodNote').value = '';
-  await loadMoods();
-  setSyncDot('synced');
-  toast(`${SHORT[moodWho]}'s mood saved ♡`);
+  dot('sy');
+  try {
+    const note = document.getElementById('moodNote').value.trim();
+    const { error } = await sb.from('oyin_mofe_moods').insert([{who:moodWho, emoji:pickedMood.emoji, label:pickedMood.label, note:note}]);
+    if (error) throw error;
+    pickedMood = null;
+    document.querySelectorAll('.mb2').forEach(b=>b.classList.remove('sel'));
+    document.getElementById('moodNote').value = '';
+    await loadMoods(); dot('');
+    toast(S[moodWho]+"'s mood saved ♡");
+  } catch(e) { dot('er'); toast('Error saving mood — check connection'); }
 }
 
 async function loadMoods() {
-  const { data } = await sb.from('oyin_mofe_moods').select('*').order('created_at', { ascending: false }).limit(30);
-  renderMoodFeed(data || []);
-}
-
-function renderMoodFeed(moods) {
-  const f = document.getElementById('moodFeed');
-  if (!moods.length) { f.innerHTML = '<div class="empty"><span class="empty-icon">💭</span><div class="empty-txt">No moods yet.<br>How are you feeling today?</div></div>'; return; }
-  f.innerHTML = moods.map(m => `
-    <div class="mood-entry">
-      <div class="me-emoji">${m.emoji}</div>
-      <div class="me-body">
-        <div class="me-who ${m.who}">${NAMES[m.who]} · ${m.label}</div>
-        ${m.note ? `<div class="me-note">${m.note}</div>` : ''}
-        <div class="me-time">${new Date(m.created_at).toLocaleString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})}</div>
-      </div>
-    </div>`).join('');
+  const { data } = await sb.from('oyin_mofe_moods').select('*').order('created_at',{ascending:false}).limit(40);
+  const feed = document.getElementById('moodFeed');
+  if (!data||!data.length) { feed.innerHTML='<div class="empty"><span class="empty-icon">💭</span><div class="empty-txt">No moods yet.<br>How are you feeling today?</div></div>'; return; }
+  feed.innerHTML = data.map(m=>{
+    const t = new Date(m.created_at).toLocaleString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+    return '<div class="me"><div class="mee">'+m.emoji+'</div><div class="meb"><div class="mew '+m.who+'">'+N[m.who]+' · '+m.label+'</div>'+(m.note?'<div class="men">'+m.note+'</div>':'')+'<div class="met">'+t+'</div></div></div>';
+  }).join('');
 }
 
 // ── LETTERS ──
 async function sendLetter() {
   const body = document.getElementById('letterBody').value.trim();
   if (!body) return toast('Write something from the heart ♡');
-  setSyncDot('syncing');
-  const { error } = await sb.from('oyin_mofe_letters').insert({ who: WHO, body });
-  if (error) { toast('Error sending letter — try again'); setSyncDot('error'); return; }
-  document.getElementById('letterBody').value = '';
-  await loadLetters();
-  setSyncDot('synced');
-  toast(`Letter sent from ${SHORT[WHO]} ♡`);
+  dot('sy');
+  try {
+    const { error } = await sb.from('oyin_mofe_letters').insert([{who:WHO, body:body}]);
+    if (error) throw error;
+    document.getElementById('letterBody').value = '';
+    await loadLetters(); dot('');
+    toast('Letter sent from '+S[WHO]+' ♡');
+  } catch(e) { dot('er'); toast('Error sending — check connection'); }
 }
 
 async function loadLetters() {
-  const { data } = await sb.from('oyin_mofe_letters').select('*').order('created_at', { ascending: false }).limit(20);
-  renderLetters(data || []);
-}
-
-function renderLetters(letters) {
-  const f = document.getElementById('letterFeed');
-  if (!letters.length) { f.innerHTML = '<div class="empty"><span class="empty-icon">✉️</span><div class="empty-txt">No letters yet.<br>Write your first one ♡</div></div>'; return; }
-  f.innerHTML = letters.map(l => `
-    <div class="letter-card" onclick="this.querySelector('.letter-expanded').classList.toggle('open')">
-      <div class="letter-meta">
-        <span class="letter-sender ${l.who}">${NAMES[l.who]}</span>
-        <span class="letter-date">${new Date(l.created_at).toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})}</span>
-      </div>
-      <div class="letter-preview">${l.body}</div>
-      <div class="letter-expanded"><div class="letter-full">${l.body}</div></div>
-    </div>`).join('');
+  const { data } = await sb.from('oyin_mofe_letters').select('*').order('created_at',{ascending:false}).limit(20);
+  const feed = document.getElementById('letterFeed');
+  if (!data||!data.length) { feed.innerHTML='<div class="empty"><span class="empty-icon">✉️</span><div class="empty-txt">No letters yet.<br>Write your first one ♡</div></div>'; return; }
+  feed.innerHTML = data.map(l=>{
+    const d = new Date(l.created_at).toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+    const safe = l.body.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    return '<div class="lcard" onclick="this.querySelector(\'.lfull-w\').classList.toggle(\'open\')"><div class="lmeta"><span class="lsender '+l.who+'">'+N[l.who]+'</span><span class="ldate">'+d+'</span></div><div class="lprev">'+safe+'</div><div class="lfull-w"><div class="lfull">'+safe+'</div></div></div>';
+  }).join('');
 }
 
 // ── QOTD ──
-const QUESTIONS = [
+const QS = [
   "What's one thing you wish I knew about how much I mean to you?",
   "If we could teleport right now, where would you take us?",
   "What song have you been listening to that makes you think of me?",
@@ -779,145 +719,176 @@ const QUESTIONS = [
   "Where do you see us in five years?",
 ];
 
+function updateQDisplay() {
+  const q = QS[QI % QS.length];
+  document.getElementById('qText').textContent = q;
+  document.getElementById('homeQ').textContent = q;
+  document.getElementById('qDay').textContent = 'Question '+(QI+1)+' of '+QS.length;
+}
+
 async function loadQotd() {
-  const q = QUESTIONS[QOTD_IDX % QUESTIONS.length];
-  document.getElementById('qotdQ').textContent = q;
-  document.getElementById('homeQotd').textContent = q;
-  document.getElementById('qotdDay').textContent = `Question ${QOTD_IDX + 1} of ${QUESTIONS.length}`;
-
-  const { data } = await sb.from('oyin_mofe_qotd').select('*').eq('question_idx', QOTD_IDX);
+  updateQDisplay();
+  const { data } = await sb.from('oyin_mofe_qotd').select('*').eq('question_idx', QI);
   const ans = {};
-  (data || []).forEach(r => { ans[r.who] = r.answer; });
-
-  const oyinEl = document.getElementById('oyinAnswer');
-  const mofeEl = document.getElementById('mofeAnswer');
-  oyinEl.className = ans.oyin ? 'q-answered' : 'q-empty';
-  oyinEl.textContent = ans.oyin || "hasn't answered yet";
-  mofeEl.className = ans.mofe ? 'q-answered' : 'q-empty';
-  mofeEl.textContent = ans.mofe || "hasn't answered yet";
+  if (data) data.forEach(r=>{ ans[r.who]=r.answer; });
+  const oe = document.getElementById('oyinAns');
+  const me = document.getElementById('mofeAns');
+  oe.className = ans.oyin ? 'q-ans' : 'q-emp'; oe.textContent = ans.oyin || "hasn't answered yet";
+  me.className = ans.mofe ? 'q-ans' : 'q-emp'; me.textContent = ans.mofe || "hasn't answered yet";
 }
 
-async function submitQotd() {
-  const val = document.getElementById('qotdInput').value.trim();
+async function submitQ() {
+  const val = document.getElementById('qInput').value.trim();
   if (!val) return toast('Type your answer ♡');
-  setSyncDot('syncing');
-  // upsert — delete old then insert
-  await sb.from('oyin_mofe_qotd').delete().eq('who', WHO).eq('question_idx', QOTD_IDX);
-  await sb.from('oyin_mofe_qotd').insert({ who: WHO, question_idx: QOTD_IDX, answer: val });
-  document.getElementById('qotdInput').value = '';
-  await loadQotd();
-  setSyncDot('synced');
-  toast('Answer saved ♡');
+  dot('sy');
+  try {
+    await sb.from('oyin_mofe_qotd').delete().eq('who', WHO).eq('question_idx', QI);
+    const { error } = await sb.from('oyin_mofe_qotd').insert([{who:WHO, question_idx:QI, answer:val}]);
+    if (error) throw error;
+    document.getElementById('qInput').value = '';
+    await loadQotd(); dot('');
+    toast('Answer saved ♡');
+  } catch(e) { dot('er'); toast('Error saving — check connection'); }
 }
 
-function nextQotd() {
-  QOTD_IDX = (QOTD_IDX + 1) % QUESTIONS.length;
-  saveLocal();
-  loadQotd();
+function nextQ() {
+  QI = (QI+1) % QS.length;
+  saveL(); loadQotd();
 }
 
 // ── BUCKET ──
 async function addBucket() {
-  const v = document.getElementById('bucketInput').value.trim();
+  const v = document.getElementById('bucketIn').value.trim();
   if (!v) return toast('Add something to look forward to ♡');
-  setSyncDot('syncing');
-  await sb.from('oyin_mofe_bucket').insert({ text: v, done: false });
-  document.getElementById('bucketInput').value = '';
-  await loadBucket();
-  setSyncDot('synced');
+  dot('sy');
+  try {
+    const { error } = await sb.from('oyin_mofe_bucket').insert([{text:v, done:false}]);
+    if (error) throw error;
+    document.getElementById('bucketIn').value = '';
+    await loadBucket(); dot('');
+  } catch(e) { dot('er'); toast('Error — check connection'); }
 }
 
 async function toggleBucket(id, current) {
-  setSyncDot('syncing');
-  await sb.from('oyin_mofe_bucket').update({ done: !current }).eq('id', id);
-  await loadBucket();
-  setSyncDot('synced');
+  dot('sy');
+  await sb.from('oyin_mofe_bucket').update({done:!current}).eq('id',id);
+  await loadBucket(); dot('');
 }
 
 async function deleteBucket(id) {
-  setSyncDot('syncing');
-  await sb.from('oyin_mofe_bucket').delete().eq('id', id);
-  await loadBucket();
-  setSyncDot('synced');
+  dot('sy');
+  await sb.from('oyin_mofe_bucket').delete().eq('id',id);
+  await loadBucket(); dot('');
 }
 
 async function loadBucket() {
-  const { data } = await sb.from('oyin_mofe_bucket').select('*').order('created_at', { ascending: false });
-  renderBucket(data || []);
-}
-
-function renderBucket(items) {
+  const { data } = await sb.from('oyin_mofe_bucket').select('*').order('created_at',{ascending:false});
   const l = document.getElementById('bucketList');
-  if (!items.length) { l.innerHTML = '<div class="empty"><span class="empty-icon">🌙</span><div class="empty-txt">Nothing on the list yet.<br>Dream up your adventures together.</div></div>'; return; }
-  l.innerHTML = items.map(b => `
-    <div class="bucket-item${b.done ? ' done-item' : ''}">
-      <button class="bucket-check${b.done ? ' checked' : ''}" onclick="toggleBucket('${b.id}',${b.done})">${b.done ? '✓' : ''}</button>
-      <span class="bucket-text">${b.text}</span>
-      <button class="bucket-del" onclick="deleteBucket('${b.id}')">✕</button>
-    </div>`).join('');
+  if (!data||!data.length) { l.innerHTML='<div class="empty"><span class="empty-icon">🌙</span><div class="empty-txt">Nothing on the list yet.<br>Dream up your adventures together.</div></div>'; return; }
+  l.innerHTML = data.map(b=>'<div class="bi'+(b.done?' di':'')+'"><button class="bc'+(b.done?' ck':'')+'" onclick="toggleBucket(\''+b.id+'\','+b.done+')">'+(b.done?'✓':'')+'</button><span class="bt">'+b.text+'</span><button class="bdel" onclick="deleteBucket(\''+b.id+'\')">✕</button></div>').join('');
 }
 
 // ── MEMORIES ──
 async function addMemory() {
   const cap = document.getElementById('memCap').value.trim();
   if (!cap) return toast('Add a caption ♡');
-  setSyncDot('syncing');
-  const date = document.getElementById('memDate').value || new Date().toLocaleDateString();
-  const url = document.getElementById('memUrl').value.trim();
-  await sb.from('oyin_mofe_memories').insert({ caption: cap, date, url });
-  document.getElementById('memCap').value = '';
-  document.getElementById('memDate').value = '';
-  document.getElementById('memUrl').value = '';
-  await loadMemories();
-  setSyncDot('synced');
-  toast('Memory saved ♡');
+  dot('sy');
+  try {
+    const date = document.getElementById('memDate').value || new Date().toLocaleDateString();
+    const url = document.getElementById('memUrl').value.trim();
+    const { error } = await sb.from('oyin_mofe_memories').insert([{caption:cap, date:date, url:url}]);
+    if (error) throw error;
+    document.getElementById('memCap').value = '';
+    document.getElementById('memDate').value = '';
+    document.getElementById('memUrl').value = '';
+    await loadMemories(); dot('');
+    toast('Memory saved ♡');
+  } catch(e) { dot('er'); toast('Error saving — check connection'); }
 }
 
 async function loadMemories() {
-  const { data } = await sb.from('oyin_mofe_memories').select('*').order('created_at', { ascending: false });
-  renderMemories(data || []);
-  if (data && data.length) document.getElementById('homeMemory').textContent = `"${data[0].caption}"`;
-}
-
-function renderMemories(mems) {
+  const { data } = await sb.from('oyin_mofe_memories').select('*').order('created_at',{ascending:false});
   const g = document.getElementById('memGrid');
-  if (!mems.length) { g.innerHTML = '<div class="empty" style="grid-column:1/-1"><span class="empty-icon">📸</span><div class="empty-txt">Memory jar is empty.<br>Add your first moment.</div></div>'; return; }
-  g.innerHTML = mems.map(m => `
-    <div class="mem-card">
-      ${m.url ? `<img class="mem-img" src="${m.url}" alt="${m.caption}" onerror="this.style.display='none"/>` : `<div class="mem-placeholder">📷</div>`}
-      <div class="mem-info">
-        <div class="mem-cap">${m.caption}</div>
-        <div class="mem-dt">${m.date}</div>
-      </div>
-    </div>`).join('');
+  const hm = document.getElementById('homeMemory');
+  if (!data||!data.length) { g.innerHTML='<div class="empty" style="grid-column:1/-1"><span class="empty-icon">📸</span><div class="empty-txt">Memory jar is empty.<br>Add your first moment.</div></div>'; return; }
+  if (hm) hm.textContent = '"'+data[0].caption+'"';
+  g.innerHTML = data.map(m=>{
+    const imgHtml = m.url
+      ? '<img class="mimg" src="'+m.url+'" alt="'+m.caption+'" onerror="this.outerHTML=\'<div class=mpl>&#128247;</div>\'">'
+      : '<div class="mpl">📷</div>';
+    return '<div class="mcard">'+imgHtml+'<div class="minfo"><div class="mcap">'+m.caption+'</div><div class="mdt">'+m.date+'</div></div></div>';
+  }).join('');
 }
 
 // ── GAMES ──
-const TOT=[['Beach holiday 🏖️','Mountain retreat 🏔️'],['Cook at home 🍳','Eat out 🍽️'],['Early bird 🌅','Night owl 🦉'],['Video call 📱','Voice note 🎙️'],['Long silence but felt 🤫','Constant chatting 💬'],['Road trip 🚗','Fly there ✈️'],['Rainy night in 🌧️','Stargazing outside 🌌'],['Coffee ☕','Tea 🍵'],['Slow songs 🎵','Hype music 🎶'],['Surprise plans 🎁','Planned dates 📅']];
-const WYR=[['Have late-night calls every day','Text lovingly all day but no calls'],['Live 2,000 miles apart but talk daily','Live 1hr away but only meet weekly'],['Know exactly when you\'ll see each other','Surprise visit with no set date'],['Never be apart again','Travel the world together for 2 years'],['Receive a handwritten letter','Get a 10-minute video message'],['Fall asleep on a call together','Fall asleep texting each other'],['Share a playlist you both build','Watch the same movie remotely']];
+const TOT=[['Beach holiday 🏖️','Mountain retreat 🏔️'],['Cook at home 🍳','Eat out 🍽️'],['Early bird 🌅','Night owl 🦉'],['Video call 📱','Voice note 🎙️'],['Long silence 🤫','Constant chatting 💬'],['Road trip 🚗','Fly there ✈️'],['Rainy night in 🌧️','Stargazing 🌌'],['Coffee ☕','Tea 🍵'],['Slow songs 🎵','Hype music 🎶'],['Surprise plans 🎁','Planned dates 📅']];
+const WYR=[['Late-night calls every day','Text lovingly all day, no calls'],['2,000 miles apart but talk daily','1hr away but only meet weekly'],["Know exactly when you'll see each other","Surprise visit with no set date"],['Never be apart again','Travel the world together for 2 years'],['Receive a handwritten letter','Get a 10-minute video message'],['Fall asleep on a call together','Fall asleep texting each other'],['Build a shared playlist','Watch the same movie remotely']];
 const TRUTHS=["What's one thing you want me to know right now but haven't said?","What was the moment you knew you were falling for me?","What's your biggest fear about our relationship?","What's one habit of mine you secretly love?","Describe the feeling you get when you see my name on your screen.","What's something you've been holding back from telling me?","What do you think our biggest strength as a couple is?","What do you miss most about me right now?","If I could read your texts from today, what would surprise me?","What does love actually feel like for you?"];
-const DARES=["Send a voice note right now saying three things you love about me.","Set our photo as your wallpaper for the next 7 days.","Write me a 5-line poem — right now, no edits.","Record a 'good morning' video to send me tomorrow.","Tell me one thing you've been too shy to say out loud.","Sing the first line of a song that reminds you of me.","Write my name on your hand and send a photo.","Plan a virtual date night and send me the details right now.","Tell me your favourite memory of us in under 60 seconds — voice note!","Write a fake Instagram caption for a photo of us that doesn't exist yet."];
-const QUIZ=[{q:"What's my go-to comfort food?",opts:["Jollof rice","Pizza","Noodles","Fried plantain"]},{q:"What time do I usually wake up?",opts:["Before 7am","7–9am","After 9am","Depends on the day"]},{q:"My idea of a perfect date is:",opts:["Quiet night in","Exploring somewhere new","Dinner & a movie","Spontaneous adventure"]},{q:"What's my love language?",opts:["Words of affirmation","Quality time","Physical touch","Acts of service"]},{q:"When I'm stressed I:",opts:["Go quiet","Talk it out","Need a distraction","Need alone time"]},{q:"My dream travel destination is:",opts:["Paris","Maldives","Tokyo","Lagos road trip"]}];
+const DARES=["Send a voice note right now saying three things you love about me.","Set our photo as your wallpaper for the next 7 days.","Write me a 5-line poem — right now, no edits.","Record a 'good morning' video to send me tomorrow.","Tell me one thing you've been too shy to say out loud.","Sing the first line of a song that reminds you of me.","Write my name on your hand and send a photo.","Plan a virtual date night and send me the details right now.","Tell me your favourite memory of us — voice note, under 60 seconds!","Write a fake Instagram caption for a photo of us that doesn't exist yet."];
+const QUIZ=[{q:"What's my go-to comfort food?",opts:["Jollof rice","Pizza","Noodles","Fried plantain"]},{q:"What time do I usually wake up?",opts:["Before 7am","7-9am","After 9am","Depends on the day"]},{q:"My idea of a perfect date is:",opts:["Quiet night in","Exploring somewhere new","Dinner & a movie","Spontaneous adventure"]},{q:"What's my love language?",opts:["Words of affirmation","Quality time","Physical touch","Acts of service"]},{q:"When I'm stressed I:",opts:["Go quiet","Talk it out","Need a distraction","Need alone time"]},{q:"My dream travel destination is:",opts:["Paris","Maldives","Tokyo","Lagos road trip"]}];
 
-function initGames(){loadTot();loadWyr();loadQuiz();drawTD();}
-function loadTot(){const q=TOT[totIdx%TOT.length];document.getElementById('totQ').textContent=q[0]+' or '+q[1]+'?';document.getElementById('totA').textContent=q[0];document.getElementById('totB').textContent=q[1];document.getElementById('totReveal').classList.remove('show');document.querySelectorAll('#g-tot .gcard-opt').forEach(o=>o.classList.remove('chosen'));}
-function chooseTot(i){document.querySelectorAll('#g-tot .gcard-opt').forEach((o,idx)=>o.classList.toggle('chosen',idx===i));document.getElementById('totReveal').classList.add('show');}
-function nextTot(){totIdx++;loadTot();}
-function loadWyr(){const q=WYR[wyrIdx%WYR.length];document.getElementById('wyrQ').textContent='Would you rather...';document.getElementById('wyrA').textContent=q[0];document.getElementById('wyrB').textContent=q[1];document.getElementById('wyrReveal').classList.remove('show');document.querySelectorAll('#g-wyr .gcard-opt').forEach(o=>o.classList.remove('chosen'));}
-function chooseWyr(i){document.querySelectorAll('#g-wyr .gcard-opt').forEach((o,idx)=>o.classList.toggle('chosen',idx===i));document.getElementById('wyrReveal').classList.add('show');}
-function nextWyr(){wyrIdx++;loadWyr();}
-function setTD(mode,btn){tdMode=mode;document.querySelectorAll('.td-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');drawTD();}
-function drawTD(){const pool=tdMode==='truth'?TRUTHS:DARES;document.getElementById('tdText').textContent=pool[Math.floor(Math.random()*pool.length)];}
-function loadQuiz(){const q=QUIZ[quizIdx%QUIZ.length];document.getElementById('quizQ').textContent=q.q;document.getElementById('quizReveal').classList.remove('show');document.getElementById('quizOpts').innerHTML=q.opts.map(o=>`<button class="gcard-opt" onclick="answerQuiz(this)">${o}</button>`).join('');}
-function answerQuiz(btn){document.querySelectorAll('#quizOpts .gcard-opt').forEach(o=>{o.disabled=true;o.classList.remove('chosen');});btn.classList.add('chosen');document.getElementById('quizReveal').classList.add('show');}
-function nextQuiz(){quizIdx++;loadQuiz();}
-function showGame(id,btn){document.querySelectorAll('.gpanel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.gtab').forEach(t=>t.classList.remove('active'));document.getElementById(id).classList.add('active');btn.classList.add('active');}
+function initGames() { loadTot(); loadWyr(); loadQuiz(); drawTD(); }
 
-// ── TOAST ──
-function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800);}
+function loadTot() {
+  const q=TOT[totI%TOT.length];
+  document.getElementById('totQ').textContent=q[0]+' or '+q[1]+'?';
+  document.getElementById('totA').textContent=q[0];
+  document.getElementById('totB').textContent=q[1];
+  document.getElementById('totRev').classList.remove('show');
+  document.querySelectorAll('#g-tot .gopt').forEach(o=>o.classList.remove('ch'));
+}
+function chooseTot(i) {
+  document.querySelectorAll('#g-tot .gopt').forEach((o,idx)=>o.classList.toggle('ch',idx===i));
+  document.getElementById('totRev').classList.add('show');
+}
+function nextTot() { totI++; loadTot(); }
+
+function loadWyr() {
+  const q=WYR[wyrI%WYR.length];
+  document.getElementById('wyrQ').textContent='Would you rather...';
+  document.getElementById('wyrA').textContent=q[0];
+  document.getElementById('wyrB').textContent=q[1];
+  document.getElementById('wyrRev').classList.remove('show');
+  document.querySelectorAll('#g-wyr .gopt').forEach(o=>o.classList.remove('ch'));
+}
+function chooseWyr(i) {
+  document.querySelectorAll('#g-wyr .gopt').forEach((o,idx)=>o.classList.toggle('ch',idx===i));
+  document.getElementById('wyrRev').classList.add('show');
+}
+function nextWyr() { wyrI++; loadWyr(); }
+
+function setTD(mode, btn) {
+  tdMode=mode;
+  document.querySelectorAll('.tdbtn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active'); drawTD();
+}
+function drawTD() {
+  const pool = tdMode==='truth'?TRUTHS:DARES;
+  document.getElementById('tdTxt').textContent = pool[Math.floor(Math.random()*pool.length)];
+}
+
+function loadQuiz() {
+  const q=QUIZ[quizI%QUIZ.length];
+  document.getElementById('quizQ').textContent=q.q;
+  document.getElementById('quizRev').classList.remove('show');
+  document.getElementById('quizOpts').innerHTML=q.opts.map(o=>'<button class="gopt" onclick="answerQuiz(this)">'+o+'</button>').join('');
+}
+function answerQuiz(btn) {
+  document.querySelectorAll('#quizOpts .gopt').forEach(o=>{o.disabled=true;o.classList.remove('ch');});
+  btn.classList.add('ch');
+  document.getElementById('quizRev').classList.add('show');
+}
+function nextQuiz() { quizI++; loadQuiz(); }
+
+function showGame(id, btn) {
+  document.querySelectorAll('.gp').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.gtab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
 
 // ── BOOT ──
-loadLocal();
+loadL();
 if (WHO) {
   document.getElementById('splash').style.display = 'none';
   launchApp();
