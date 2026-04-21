@@ -54,6 +54,36 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--cream);di
 .sdot.loading{background:var(--gold);animation:blink 0.9s infinite;}
 .sdot.err{background:#f87171;}
 @keyframes blink{0%,100%{opacity:1;}50%{opacity:0.25;}}
+
+/* ── NOTIFICATION BELL ── */
+.notif-btn{position:relative;background:none;border:none;cursor:pointer;padding:4px;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;justify-content:center;}
+.notif-bell{font-size:1.15rem;line-height:1;display:block;transition:transform 0.2s;}
+.notif-btn:active .notif-bell{transform:rotate(-20deg) scale(1.1);}
+.notif-badge{position:absolute;top:-2px;right:-2px;min-width:16px;height:16px;background:linear-gradient(135deg,#e53e3e,#c53030);border-radius:100px;font-size:0.42rem;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;padding:0 4px;border:1.5px solid var(--bg);opacity:0;transform:scale(0.4);transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1);pointer-events:none;}
+.notif-badge.show{opacity:1;transform:scale(1);}
+
+/* ── NOTIFICATION PANEL ── */
+.notif-overlay{position:fixed;inset:0;z-index:499;background:rgba(0,0,0,0);pointer-events:none;transition:background 0.3s;}
+.notif-overlay.open{background:rgba(0,0,0,0.45);pointer-events:all;}
+.notif-panel{position:fixed;top:0;left:50%;transform:translateX(-50%) translateY(-110%);width:100%;max-width:430px;background:rgba(18,10,22,0.98);border-bottom:1px solid var(--border2);z-index:500;transition:transform 0.32s cubic-bezier(0.34,1.2,0.64,1);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);box-shadow:0 12px 40px rgba(0,0,0,0.7);padding-top:env(safe-area-inset-top,0px);}
+.notif-panel.open{transform:translateX(-50%) translateY(0);}
+.notif-panel-hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 12px;border-bottom:1px solid var(--border);}
+.notif-panel-title{font-family:'Playfair Display',serif;font-style:italic;font-size:1rem;color:var(--cream);}
+.notif-close{background:none;border:none;color:var(--muted);font-size:1.1rem;cursor:pointer;padding:4px 6px;-webkit-tap-highlight-color:transparent;border-radius:6px;}
+.notif-close:active{background:rgba(255,255,255,0.06);}
+.notif-list{max-height:58vh;overflow-y:auto;}
+.notif-list::-webkit-scrollbar{display:none;}
+.notif-item{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;border-bottom:1px solid var(--border);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background 0.15s;animation:nSlide 0.22s ease;}
+@keyframes nSlide{from{opacity:0;transform:translateY(-5px);}to{opacity:1;transform:none;}}
+.notif-item:active{background:rgba(196,96,122,0.08);}
+.notif-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;background:rgba(196,96,122,0.12);border:1px solid rgba(196,96,122,0.22);}
+.notif-body{flex:1;min-width:0;}
+.notif-text{font-size:0.78rem;color:var(--cream);line-height:1.45;margin-bottom:3px;}
+.notif-text b{color:var(--rose2);font-weight:500;}
+.notif-time{font-size:0.5rem;color:var(--muted);}
+.notif-empty{padding:36px 16px;text-align:center;}
+.notif-empty-icon{font-size:1.8rem;display:block;margin-bottom:10px;opacity:0.3;}
+.notif-empty-txt{font-size:0.7rem;color:var(--muted);line-height:1.8;}
 .scroll-area{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;}
 .scroll-area::-webkit-scrollbar{display:none;}
 
@@ -349,9 +379,25 @@ textarea::placeholder,input::placeholder{color:var(--muted2);}
     <div class="hdr-title"><span class="hn1">Oyin</span><span class="hamp">&amp;</span><span class="hn2">Mofe</span></div>
     <div class="hdr-right">
       <div class="streak-pill" id="streakPill">🔥 0 days</div>
+      <button class="notif-btn" onclick="toggleNotifPanel()" aria-label="Notifications">
+        <span class="notif-bell">🔔</span>
+        <span class="notif-badge" id="notifBadge"></span>
+      </button>
       <div class="sdot" id="sdot"></div>
     </div>
   </header>
+
+  <!-- NOTIFICATION PANEL -->
+  <div class="notif-overlay" id="notifOverlay" onclick="closeNotifPanel()"></div>
+  <div class="notif-panel" id="notifPanel">
+    <div class="notif-panel-hdr">
+      <span class="notif-panel-title">Notifications</span>
+      <button class="notif-close" onclick="closeNotifPanel()">✕</button>
+    </div>
+    <div class="notif-list" id="notifList">
+      <div class="notif-empty"><span class="notif-empty-icon">🔔</span><div class="notif-empty-txt">All caught up ♡<br>Nothing new from your partner yet.</div></div>
+    </div>
+  </div>
 
   <div class="scroll-area" id="scrollArea">
 
@@ -595,6 +641,7 @@ async function boot(){
   document.getElementById('app').style.display='flex';
   setupUI();
   await loadAll();
+  await checkNotifs();
   setInterval(updateCd,1000);
   setInterval(bgRefresh,18000);
   sync('');
@@ -614,7 +661,175 @@ function setupUI(){
 }
 
 async function loadAll(){await Promise.all([loadStreak(),loadMoods(),loadLetters(),loadQAnswers(),loadBucket(),loadMemories()]);}
-async function bgRefresh(){sync('loading');try{await loadAll();sync('');}catch(e){sync('err');}}
+async function bgRefresh(){sync('loading');try{await loadAll();await checkNotifs();sync('');}catch(e){sync('err');}}
+
+// ══════════════════════════════════════
+// NOTIFICATION SYSTEM
+// Tracks partner activity since last open
+// ══════════════════════════════════════
+let notifList = []; // in-memory list of current notifications
+
+function getLastSeen(){return localStorage.getItem('_lastSeen_'+WHO)||new Date(0).toISOString();}
+function setLastSeen(){localStorage.setItem('_lastSeen_'+WHO, new Date().toISOString());}
+
+function timeAgo(iso){
+  const diff=Date.now()-new Date(iso);
+  const m=Math.floor(diff/60000);
+  if(m<1)return'just now';
+  if(m<60)return m+'m ago';
+  const h=Math.floor(m/60);
+  if(h<24)return h+'h ago';
+  return Math.floor(h/24)+'d ago';
+}
+
+async function checkNotifs(){
+  const ow=WHO==='oyin'?'mofe':'oyin';
+  const since=getLastSeen();
+  const newItems=[];
+
+  // Letters from partner
+  const{data:letters}=await _sb.from('oyin_mofe_letters').select('id,created_at').eq('who',ow).gt('created_at',since).order('created_at',{ascending:false});
+  if(letters&&letters.length){
+    letters.forEach(l=>newItems.push({
+      id:'letter-'+l.id, icon:'💌',
+      text:`<b>${SHORT[ow]}</b> sent you a love letter`,
+      time:l.created_at, tab:'s-letters', nav:'nt-letters'
+    }));
+  }
+
+  // Moods from partner
+  const{data:moods}=await _sb.from('oyin_mofe_moods').select('id,created_at,emoji,label').eq('who',ow).gt('created_at',since).order('created_at',{ascending:false});
+  if(moods&&moods.length){
+    moods.forEach(m=>newItems.push({
+      id:'mood-'+m.id, icon:m.emoji,
+      text:`<b>${SHORT[ow]}</b> is feeling ${m.label}`,
+      time:m.created_at, tab:'s-mood', nav:'nt-mood'
+    }));
+  }
+
+  // Q&A answers from partner
+  const{data:qa}=await _sb.from('oyin_mofe_qotd').select('id,created_at,question_idx').eq('who',ow).gt('created_at',since).order('created_at',{ascending:false});
+  if(qa&&qa.length){
+    qa.forEach(q=>newItems.push({
+      id:'qa-'+q.id, icon:'💬',
+      text:`<b>${SHORT[ow]}</b> answered today's question`,
+      time:q.created_at, tab:'s-qotd', nav:'nt-qotd'
+    }));
+  }
+
+  // Memories added by partner
+  const{data:mems}=await _sb.from('oyin_mofe_memories').select('id,created_at,caption').gt('created_at',since).order('created_at',{ascending:false});
+  if(mems&&mems.length){
+    mems.forEach(m=>newItems.push({
+      id:'mem-'+m.id, icon:'📸',
+      text:`<b>${SHORT[ow]}</b> added a memory: "${m.caption.slice(0,30)}${m.caption.length>30?'…':''}"`,
+      time:m.created_at, tab:'s-memories', nav:'nt-memories'
+    }));
+  }
+
+  // Bucket list items added
+  const{data:buckets}=await _sb.from('oyin_mofe_bucket').select('id,created_at,text').gt('created_at',since).order('created_at',{ascending:false});
+  if(buckets&&buckets.length){
+    buckets.forEach(b=>newItems.push({
+      id:'bucket-'+b.id, icon:'🌙',
+      text:`New bucket list item: "${b.text.slice(0,30)}${b.text.length>30?'…':''}"`,
+      time:b.created_at, tab:'s-bucket', nav:'nt-bucket'
+    }));
+  }
+
+  // Crack the Code — partner locked code
+  if(ctcGame&&ctcGame[ow+'_code']){
+    const gameUpdated=ctcGame.updated_at||ctcGame.created_at;
+    if(gameUpdated>since){
+      newItems.push({
+        id:'ctc-lock-'+ctcRound, icon:'🔐',
+        text:`<b>${SHORT[ow]}</b> locked their code — time to guess!`,
+        time:gameUpdated, tab:'s-games', nav:'nt-games'
+      });
+    }
+  }
+
+  // Streak reminder — if neither has checked in today and it's past 6pm
+  const h=new Date().getHours();
+  if(h>=18){
+    const{data:streak}=await _sb.from('oyin_mofe_streak').select('oyin_checked,mofe_checked').limit(1);
+    if(streak&&streak.length){
+      const row=streak[0];
+      if(!row.oyin_checked||!row.mofe_checked){
+        newItems.push({
+          id:'streak-reminder-'+today(), icon:'🔥',
+          text:`Don't break the streak! ${!row.oyin_checked&&!row.mofe_checked?'Neither of you has checked in today.':!row[WHO+'_checked']?'You haven\'t checked in today yet!':SHORT[ow]+' hasn\'t checked in yet.'}`,
+          time:new Date().toISOString(), tab:'s-mood', nav:'nt-mood'
+        });
+      }
+    }
+  }
+
+  // Deduplicate against existing list by id
+  const existingIds=new Set(notifList.map(n=>n.id));
+  const fresh=newItems.filter(n=>!existingIds.has(n.id));
+  notifList=[...fresh,...notifList];
+
+  // Sort by time desc
+  notifList.sort((a,b)=>new Date(b.time)-new Date(a.time));
+
+  renderNotifBadge();
+}
+
+function renderNotifBadge(){
+  const badge=document.getElementById('notifBadge');
+  if(!badge)return;
+  const count=notifList.length;
+  badge.textContent=count>9?'9+':count;
+  badge.classList.toggle('show',count>0);
+}
+
+function renderNotifPanel(){
+  const list=document.getElementById('notifList');
+  if(!list)return;
+  if(!notifList.length){
+    list.innerHTML='<div class="notif-empty"><span class="notif-empty-icon">🔔</span><div class="notif-empty-txt">All caught up ♡<br>Nothing new from your partner yet.</div></div>';
+    return;
+  }
+  list.innerHTML=notifList.map((n,i)=>`
+    <div class="notif-item" onclick="tapNotif(${i})">
+      <div class="notif-icon">${n.icon}</div>
+      <div class="notif-body">
+        <div class="notif-text">${n.text}</div>
+        <div class="notif-time">${timeAgo(n.time)}</div>
+      </div>
+    </div>`).join('');
+}
+
+function tapNotif(i){
+  const n=notifList[i];
+  if(!n)return;
+  // remove this notification
+  notifList.splice(i,1);
+  renderNotifBadge();
+  closeNotifPanel();
+  // navigate to the relevant tab
+  setTimeout(()=>goTab(n.tab,n.nav),220);
+}
+
+function toggleNotifPanel(){
+  const panel=document.getElementById('notifPanel');
+  const overlay=document.getElementById('notifOverlay');
+  if(panel.classList.contains('open')){
+    closeNotifPanel();
+  }else{
+    renderNotifPanel();
+    panel.classList.add('open');
+    overlay.classList.add('open');
+    // mark seen timestamp when panel opens
+    setLastSeen();
+  }
+}
+
+function closeNotifPanel(){
+  document.getElementById('notifPanel').classList.remove('open');
+  document.getElementById('notifOverlay').classList.remove('open');
+}
 
 // ── NAV SLIDER ──
 function updateNavSlider(){
